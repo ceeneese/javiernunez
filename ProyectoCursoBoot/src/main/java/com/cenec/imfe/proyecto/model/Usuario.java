@@ -1,7 +1,8 @@
 package com.cenec.imfe.proyecto.model;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,7 +67,7 @@ public class Usuario
         joinColumns = { @JoinColumn(name = "idUsr") }, 
         inverseJoinColumns = { @JoinColumn(name = "idGrupo") }
     )
-    private ArrayList<GrupoDocumentos> grupos;
+    private Set<GrupoDocumentos> grupos;
 	
 	/**
 	 * Constructor
@@ -75,7 +76,7 @@ public class Usuario
 	{
 		super();
 
-		this.grupos = new ArrayList<GrupoDocumentos>(3);
+		this.grupos = new HashSet<GrupoDocumentos>(3);
 	}
 
 	public Integer getIdUsuario() {
@@ -182,11 +183,11 @@ public class Usuario
 		this.pwdAccesoWeb = pwdAccesoWeb;
 	}
 
-	public ArrayList<GrupoDocumentos> getGrupos() {
+	public Set<GrupoDocumentos> getGrupos() {
 		return grupos;
 	}
 
-	public void setGrupos(ArrayList<GrupoDocumentos> grupos) {
+	public void setGrupos(Set<GrupoDocumentos> grupos) {
 		this.grupos = grupos;
 	}
 	

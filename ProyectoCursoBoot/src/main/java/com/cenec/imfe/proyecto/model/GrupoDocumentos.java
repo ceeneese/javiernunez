@@ -1,7 +1,7 @@
 package com.cenec.imfe.proyecto.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,7 +33,7 @@ public class GrupoDocumentos
         joinColumns = { @JoinColumn(name = "idGrupo") }, 
         inverseJoinColumns = { @JoinColumn(name = "idDocumento") }
     )
-    private List<DocumentInfo> documentos;
+    private Set<DocumentInfo> documentos;
     
 	// Por ahora la relación ManytoMany entre grupos y usuarios va a ser unidireccional,
 	// es decir, un grupo no va a saber qué usuarios le referencian
@@ -47,7 +47,7 @@ public class GrupoDocumentos
     {
     	super();
     	
-    	documentos = new ArrayList<DocumentInfo>();
+    	documentos = new HashSet<DocumentInfo>();
     }
     
 	public Integer getId() {
@@ -66,11 +66,11 @@ public class GrupoDocumentos
 		this.nombre = nombre;
 	}
 
-	public List<DocumentInfo> getDocumentos() {
+	public Set<DocumentInfo> getDocumentos() {
 		return documentos;
 	}
 
-	public void setDocumentos(List<DocumentInfo> documentos) {
+	public void setDocumentos(Set<DocumentInfo> documentos) {
 		this.documentos = documentos;
 	}
 	

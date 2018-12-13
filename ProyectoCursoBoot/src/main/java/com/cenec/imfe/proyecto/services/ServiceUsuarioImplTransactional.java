@@ -2,6 +2,7 @@ package com.cenec.imfe.proyecto.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -113,7 +114,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 			
 			for (GrupoDocumentos grupo : usr.getGrupos())
 			{
-				List<DocumentInfo> docs = grupo.getDocumentos();
+				Set<DocumentInfo> docs = grupo.getDocumentos();
 				
 				for (DocumentInfo doc : docs)
 				{
