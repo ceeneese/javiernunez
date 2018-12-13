@@ -9,13 +9,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cenec.imfe.proyecto.Constants;
 import com.cenec.imfe.proyecto.model.DocumentInfo;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 
-@Controller ("/admin/doc")
+@Controller
+@RequestMapping("/admin/doc")
 public class ControllerAdminDocs
 {
 	@Autowired
@@ -29,22 +31,37 @@ public class ControllerAdminDocs
 		return Constants.JSP_ADMIN_EDITDOC;
 	}
 	
-	@PostMapping("/new")
-	public String processNewDoc(@RequestParam DocumentInfo doc, BindingResult result, Model model)
+	@PostMapping("/save")
+	public String processSaveDoc(@RequestParam DocumentInfo doc, BindingResult result, Model model) throws Exception
 	{
 		// TODO Poner los valores de @Valid al bean DocumentInfo para que Spring pueda hacer el chequeo de campos
 		
 		// TODO Comprobar el BindingResult
-		
+
 		try
 		{
-			srvcDocs.saveDocument(doc);
+			if (doc.getIdDoc() != null)
+			{
+				// El documento no es nuevo, es una modificación 
+				DocumentInfo oldDoc = srvcDocs.getDocument(doc.getIdDoc());
+				
+				// Borrar el archivo anterior, si es que ha cambiado
+				File file = new File(oldDoc.getLocation());
+				if (file.exists())
+				{
+					file.delete();
+				}
+			}
 			
+			// TODO Falta subir y guardar el nuevo archivo
+			
+			srvcDocs.saveDocument(doc);
+
 			// TODO Poner en todos los JSP una label de mensaje para poder mostrar el resultado de operaciones. La label pueder tener
 			// el mismo nombre en todas las JSP de modo que sea cual sea se pueda establecer un valor desde cualquier controller
-			
+
 			// TODO Internacionalizar
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento ha sido guardado");
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento " + doc.getName() + " ha sido guardado");
 			
 			return processListDocs(model);
 		}
@@ -67,40 +84,6 @@ public class ControllerAdminDocs
 			model.addAttribute(Constants.MODEL_ATTR_DOC, doc);
 			
 			return Constants.JSP_ADMIN_EDITDOC;
-		}
-		catch (Exception e)
-		{
-			model.addAttribute(Constants.MODEL_ATTR_ERROR, e);
-			return Constants.JSP_ADMIN_ERROR;
-		}
-	}
-	
-	@PostMapping("/save")
-	public String processSaveDoc(@RequestParam DocumentInfo doc, Model model) throws Exception
-	{
-		try
-		{
-			if (doc.getIdDoc() != null)
-			{
-				// El documento no es nuevo, es una modificación 
-				DocumentInfo oldDoc = srvcDocs.getDocument(doc.getIdDoc());
-				
-				// Borrar el archivo anterior, si es que ha cambiado
-				File file = new File(oldDoc.getLocation());
-				if (file.exists())
-				{
-					file.delete();
-				}
-			}
-			
-			// TODO Falta subir y guardar el nuevo archivo
-			
-			srvcDocs.saveDocument(doc);
-
-			// TODO Internacionalizar
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento " + doc.getName() + " ha sido guardado");
-			
-			return Constants.JSP_ADMIN_LISTDOCS;
 		}
 		catch (Exception e)
 		{

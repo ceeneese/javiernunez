@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cenec.imfe.proyecto.Constants;
@@ -19,7 +20,8 @@ import com.cenec.imfe.proyecto.model.GrupoDocumentos;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 import com.cenec.imfe.proyecto.services.ServiceGrupoDocs;
 
-@Controller ("/admin/group")
+@Controller
+@RequestMapping("/admin/group")
 public class ControllerAdminGroups
 {
 	@Autowired
