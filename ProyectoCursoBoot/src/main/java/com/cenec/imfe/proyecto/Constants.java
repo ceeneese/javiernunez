@@ -23,7 +23,11 @@ public interface Constants
 	String MODEL_ATTR_DOCSLIST = "ModelAttrDocsList";
 	
 	// Atributo pasado a la JSP de edición de usuarios que contiene el usuario a editar
-	String MODEL_ATTR_USER = "ModelAttrUser";
+	// Atributo pasado a la JSP de login de usuario que contiene el usuario que accede
+	String MODEL_ATTR_USER = "modelAttrUser";
+
+	// Atributo pasado a la JSP de login de administrador que contiene el administrador que accede
+	String MODEL_ATTR_ADMIN = "modelAttrAdmin";
 
 	// Atributo pasado a la JSP de edición de grupos de documentos que contiene el grupo a editar
 	String MODEL_ATTR_GROUP = "ModelAttrGroup";
@@ -38,9 +42,21 @@ public interface Constants
 	// Atributo pasado a la JSP de edición de usuarios que contiene la lista de grupos (sólo nombres e IDs)
 	String MODEL_ATTR_GROUPSLIST = "ModelAttrGroupsList";
 
+	// DIRECCIONES URI DE CONTROLADORES
+	
+	// TODO Poner todas las URI como constantes
+	
+	String URI_USER_BASE = "/user";
+	String URI_USER_LOGIN = "/login";
+	String URI_USER_DOCLIST = "/doclist";
+	
+	String URI_ADMIN_BASE = "/admin";
+	String URI_ADMIN_LOGIN = "/login";
+	String URI_ADMIN_MAINMENU = "/mainmenu";
+	
 	// NOMBRES DE LAS PÁGINAS JSP (EN SPRING NO SE USA LA EXTENSIÓN .jsp PORQUE EL BEAN InternalResourceViewResolver GESTIONA PREFIJOS Y SUFIJOS)
 	
-	String JSP_USER_LOGIN = "index";
+	String JSP_USER_LOGIN = "JspUserLogin";
 	String JSP_USER_ERROR = "JspUserError";
 	String JSP_USER_LISTDOCS = "JspUserListDocs";
 

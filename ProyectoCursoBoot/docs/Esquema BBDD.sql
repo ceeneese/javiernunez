@@ -13,7 +13,7 @@ CREATE TABLE `gestiondocumentos`.`usuario` (
   `provincia` VARCHAR(15) NULL,
   `tfnoFijo` VARCHAR(9) NULL,
   `tfnoMovil` VARCHAR(12) NULL,
-  `correo-e` VARCHAR(45) NULL,
+  `correo` VARCHAR(45) NULL,
   `usrAcceso` VARCHAR(12) NULL,
   `pwdAcceso` VARCHAR(15) NULL,
   UNIQUE INDEX `idCliente_UNIQUE` (`idCliente` ASC) VISIBLE,
@@ -22,7 +22,7 @@ CREATE TABLE `gestiondocumentos`.`usuario` (
   
 -- Creación de la tabla de administradores
 CREATE TABLE `gestiondocumentos`.`administrador` (
-  `idAdmin` INT NOT NULL,
+  `idAdmin` INT NOT NULL AUTO_INCREMENT,
   `usrAcceso` VARCHAR(12) NOT NULL,
   `pwdAcceso` VARCHAR(15) NOT NULL,
   PRIMARY KEY (`idAdmin`),
@@ -30,14 +30,14 @@ CREATE TABLE `gestiondocumentos`.`administrador` (
   
 -- Creación de la tabla de documentos
 CREATE TABLE `gestiondocumentos`.`documento` (
-  `idDocumento` INT NOT NULL,
+  `idDocumento` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(60) NOT NULL,
   `ubicacion` VARCHAR(120) NOT NULL,
   PRIMARY KEY (`idDocumento`));
   
 -- Creación de la tabla de grupos de documentos
 CREATE TABLE `gestiondocumentos`.`grupodocumentos` (
-  `idGrupo` INT NOT NULL,
+  `idGrupo` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idGrupo`));
   

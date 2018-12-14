@@ -36,14 +36,13 @@
 			<!-- Constants.MODEL_ATTR_USERSLIST -->
 			<c:forEach items="${ModelAttrUsersList}" var="user">
 				
-				<!-- Creo que este 'choose' no es necesario,  -->
 				<c:choose>
-					<c:when test = "${user.clientid != null}">
- 						<c:set var = "clientid" value = "${user.clientid}"/>
+					<c:when test = "${user.idCliente != null}">
+ 						<c:set var = "clientid" value = "${user.idCliente}"/>
 					</c:when>
          
 					<c:otherwise>
-						<c:set var = "clientid" value = "---"/>
+						<c:set var = "clientid" value = "No cliente"/>
 					</c:otherwise>
 				</c:choose>
 
@@ -61,5 +60,8 @@
 		</c:forEach>
 			
 		</table>
+		<br>		
+		<a href="/admin/mainmenu"><spring:message code="jsp.admin.listusers.back"/></a>
+		
 	</body>
 </html>

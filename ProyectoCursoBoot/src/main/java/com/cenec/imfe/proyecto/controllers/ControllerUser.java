@@ -38,7 +38,7 @@ public class ControllerUser
 	/**
 	 * Procesa la petición de listado de documentos para un usuario
 	 */
-	@GetMapping("/doclist")
+	@GetMapping(Constants.URI_USER_DOCLIST)
 	public String processList(HttpServletRequest request, Model model) throws Exception
 	{
 		try

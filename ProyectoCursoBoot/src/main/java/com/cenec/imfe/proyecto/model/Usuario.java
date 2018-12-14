@@ -26,7 +26,7 @@ public class Usuario
 	private Integer idUsuario;
 	
 	@Column(name = "idCliente", nullable = true, unique = true)	
-	private int idCliente;
+	private Integer idCliente;
 	
 	@Column(name = "fechaAlta", nullable = false)	
 	private Date fechaAlta;
@@ -52,7 +52,7 @@ public class Usuario
 	@Column(name = "tfnoMovil", nullable = true)	
 	private String tfnoMovil;
 	
-	@Column(name = "correo-e", nullable = true)	
+	@Column(name = "correo", nullable = true)	
 	private String correo_e;
 	
 	@Column(name = "usrAcceso", nullable = true, unique = true)	
@@ -87,11 +87,11 @@ public class Usuario
 		this.idUsuario = idUsuario;
 	}
 
-	public int getIdCliente() {
+	public Integer getIdCliente() {
 		return idCliente;
 	}
 
-	public void setIdCliente(int idCliente) {
+	public void setIdCliente(Integer idCliente) {
 		this.idCliente = idCliente;
 	}
 

@@ -38,5 +38,7 @@
 		</c:forEach>
 			
 		</table>
+		<br>		
+		<a href="/admin/mainmenu"><spring:message code="jsp.admin.listdocs.back"/></a>
 	</body>
 </html>

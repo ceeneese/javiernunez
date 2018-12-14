@@ -1,5 +1,7 @@
 package com.cenec.imfe.proyecto.services;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,8 +10,12 @@ import com.cenec.imfe.proyecto.model.Administrador;
 import com.cenec.imfe.proyecto.utils.PasswordEncoder;
 
 @Service
+@Transactional
 public class ServiceAdministradorImpl implements ServiceAdministrador
 {
+	
+	// TODO ¿Por qué hay que declarar el servicio como transaccional si no hace falta?
+	//      En caso de no hacerlo, Hibernate da un error
 	@Autowired
 	private DaoAdmin dao;
 	

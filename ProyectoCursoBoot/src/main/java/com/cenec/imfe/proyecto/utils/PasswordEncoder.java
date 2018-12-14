@@ -46,7 +46,9 @@ public class PasswordEncoder
 			result[idx] = (char)(plainPassword.charAt(idx) + 1);
 		}
 		
-		return new String(result);
+		// TODO Codificar de verdad, para pruebas se devuelve la password plana
+		// return new String(result);
+		return plainPassword;
 	}
 
 	/**

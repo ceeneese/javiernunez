@@ -37,9 +37,12 @@ public class ControllerAdminGroups
 	{
 		try
 		{
-			List<DocumentInfo> docsList = srvcDocs.getDocuments();
+			GrupoDocumentos group = new GrupoDocumentos();
+			model.addAttribute(Constants.MODEL_ATTR_GROUP, group);
 			
+			List<DocumentInfo> docsList = srvcDocs.getDocuments();
 			model.addAttribute(Constants.MODEL_ATTR_DOCSLIST, docsList);
+			
 			return Constants.JSP_ADMIN_EDITGROUP;
 		}
 		catch (Exception e)

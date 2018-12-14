@@ -17,11 +17,11 @@ import com.cenec.imfe.proyecto.model.Usuario;
 @Repository
 public class DaoUsuarioImplHib implements DaoUsuario
 {
-	private static final String CLASSNAME = Usuario.class.getSimpleName();
+	private static final String CLASSNAME = Usuario.class.getName();
 
-	static final String ATTR_IDUSR = "idUsuario";
-	static final String ATTR_IDCLIENTE = "idCliente";
-	static final String ATTR_WEBUSR = "usrAccesoWeb";
+	private static final String ATTR_IDUSR = "idUsuario";
+	private static final String ATTR_IDCLIENTE = "idCliente";
+	private static final String ATTR_WEBUSR = "usrAccesoWeb";
 	
 	private static final String HQL_SELECT_ALL = "FROM " + CLASSNAME;
 
@@ -63,7 +63,7 @@ public class DaoUsuarioImplHib implements DaoUsuario
 		catch (Exception e)
 		{
 			// TODO Internacionalizar
-			throw new DaoException("No se puede obtener el usuario " + access);
+			throw new DaoException("No se puede obtener el usuario " + access, e);
 		}
 	}
 	
@@ -71,35 +71,56 @@ public class DaoUsuarioImplHib implements DaoUsuario
 	{
 		AccessType type = access.getType();
 		
-		String paramName;
+		String attrName;
 		Object paramValue;
 		switch (type)
 		{
 			case ID_CLIENTE :
 				AccessBy.AccessByClient abc = (AccessBy.AccessByClient)access;
-				paramName = ATTR_IDCLIENTE;
+				attrName = ATTR_IDCLIENTE;
 				paramValue = abc.getClientId(); 
 				break;
 			case ID_USUARIO :
 				AccessBy.AccessByUsr abu = (AccessBy.AccessByUsr)access;
-				paramName = ATTR_IDUSR;
+				attrName = ATTR_IDUSR;
 				paramValue = abu.getUsrId(); 
 				break;
 			case USR_WEB :
 			default:
 				AccessBy.AccessByWebUsr abw = (AccessBy.AccessByWebUsr)access;
-				paramName = ATTR_WEBUSR;
+				attrName = ATTR_WEBUSR;
 				paramValue = abw.getWebUser(); 
 				break;
 		}
 		
+		// TODO Comprobar por qué esta sentencia SELECT no funciona
+
 		StringBuffer hqlSelect = new StringBuffer(50).append(HQL_SELECT_ALL).
-				append(" WHERE ").append(paramName).append(" = ").append(paramValue);
+				append(" AS u WHERE u.").append(attrName).append(" = :param");
 
 		@SuppressWarnings("unchecked")
 		Query<Usuario> query = (Query<Usuario>)this.hibernateSessionFactory.getCurrentSession().createQuery(hqlSelect.toString());
-		
+		query.setParameter("param", paramValue);
 		return (Usuario)query.uniqueResult();
+
+/*		@SuppressWarnings("unchecked")
+		List<Usuario> list = this.hibernateSessionFactory.getCurrentSession().createQuery(HQL_SELECT_ALL).list();
+		
+		int idx = 0;
+		while (idx < list.size())
+		{
+			Usuario usr = list.get(idx);
+			
+			if (usr.getUsrAccesoWeb().equals(paramValue))
+			{
+				return usr;
+			}
+			
+			idx++;
+		}
+		
+		return null;
+*/
 	}
 
 	@Override

@@ -13,12 +13,12 @@
 
 	<body>
 
-		<spring:message code="jsp.user.admin.message"/>
+		<spring:message code="jsp.admin.error.message"/>
 		<br>
 		${error}
 		<br><br>
 		
 		<!-- TODO 'inicio' está definido como constante -->
-		<a href="adminlogin"><spring:message code="jsp.admin.error.exitlink"/></a>
+		<a href="/admin/login"><spring:message code="jsp.admin.error.exitlink"/></a>
 	</body>
 </html>

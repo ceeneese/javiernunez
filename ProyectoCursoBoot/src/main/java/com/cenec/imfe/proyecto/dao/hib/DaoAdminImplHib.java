@@ -12,7 +12,7 @@ import com.cenec.imfe.proyecto.model.Administrador;
 @Repository
 public class DaoAdminImplHib implements DaoAdmin
 {
-	private static final String CLASSNAME = Administrador.class.getSimpleName();
+	private static final String CLASSNAME = Administrador.class.getName();
 
 	static final String ATTR_NAME = "usr";
 	

@@ -5,12 +5,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cenec.imfe.proyecto.Constants;
+import com.cenec.imfe.proyecto.model.ModelAttrLoginUser;
 import com.cenec.imfe.proyecto.services.OperationResult;
 import com.cenec.imfe.proyecto.services.ServiceAdministrador;
 import com.cenec.imfe.proyecto.services.ServiceUsuario;
@@ -52,16 +54,33 @@ public class ControllerInicio
 		}
     }
 	
+    @GetMapping(Constants.URI_USER_BASE + Constants.URI_USER_LOGIN)
+    public String processUserLogin(Model model)
+    {
+    	try
+    	{
+    		ModelAttrLoginUser usr = new ModelAttrLoginUser();
+    		model.addAttribute(Constants.MODEL_ATTR_USER, usr);
+    		
+        	return Constants.JSP_USER_LOGIN;
+    	}
+    	catch (Exception e)
+    	{
+			model.addAttribute(Constants.MODEL_ATTR_ERROR, e);
+			return Constants.JSP_USER_ERROR;
+    	}
+    }
+    
 	/**
 	 * 
-	 * @param usrName
-	 * @param usrPwd
+	 * @param modelAttrUser
+	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("/login")
-	public String processUserLogin(@RequestParam String usrName, @RequestParam String usrPwd,
+	@PostMapping(Constants.URI_USER_BASE + Constants.URI_USER_LOGIN)
+	public String processUserLogin(@ModelAttribute ModelAttrLoginUser modelAttrUser,
 			HttpServletRequest request, Model model) throws Exception
 	{
 		// TODO ¿Qué hacer si ya hay sesión iniciada?
@@ -72,7 +91,7 @@ public class ControllerInicio
 		
 		try
 		{
-			OperationResult result = srvcUsuario.login(usrName, usrPwd);
+			OperationResult result = srvcUsuario.login(modelAttrUser.getUsr(), modelAttrUser.getPwd());
 			
 			if (result.getOperationResult())
 			{
@@ -83,7 +102,8 @@ public class ControllerInicio
 
 				// TODO Añadir filtros de sesión (interceptor)
 				
-				return "forward:user/doclist?userId=" + userId.toString();
+				// return "forward:user/doclist";
+				return "redirect:" + Constants.URI_USER_BASE + Constants.URI_USER_DOCLIST;
 				
 				// También podría hacerse la llamada directamente en Java:
 //				return processList(userId, model);
@@ -102,6 +122,23 @@ public class ControllerInicio
 		}
 	}	
 
+    @GetMapping(Constants.URI_ADMIN_BASE + Constants.URI_ADMIN_LOGIN)
+    public String processAdminLogin(Model model)
+    {
+    	try
+    	{
+    		ModelAttrLoginUser usr = new ModelAttrLoginUser();
+    		model.addAttribute(Constants.MODEL_ATTR_ADMIN, usr);
+    		
+        	return Constants.JSP_ADMIN_LOGIN;
+    	}
+    	catch (Exception e)
+    	{
+			model.addAttribute(Constants.MODEL_ATTR_ERROR, e);
+			return Constants.JSP_ADMIN_ERROR;
+    	}
+    }
+
 	/**
 	 * 
 	 * @param adminName
@@ -110,35 +147,25 @@ public class ControllerInicio
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("/adminlogin")
-	public String processAdminLogin(@RequestParam String adminName, @RequestParam String adminPwd,
+	@PostMapping(Constants.URI_ADMIN_BASE + Constants.URI_ADMIN_LOGIN)
+	public String processAdminLogin(@ModelAttribute ModelAttrLoginUser modelAttrAdmin,
 			HttpServletRequest request, Model model) throws Exception
 	{
 		try
 		{
-			// Se comprueba si se ha llegado aquí a partir de algún error pero la sesión ya fue iniciada
-			Integer adminId = (Integer)request.getSession().getAttribute(Constants.SESSION_ATTR_ADMINID);
-			
-			if (adminId == null)
-			{
-				// No hay sesión
-				return Constants.JSP_ADMIN_LOGIN;
-			}
-			
-			// Se ha llegado aquí a través del acceso a login
-			
-			OperationResult result = srvcAdmin.autenticar(adminName, adminPwd);
+			OperationResult result = srvcAdmin.autenticar(modelAttrAdmin.getUsr(), modelAttrAdmin.getPwd());
 			
 			if (result.getOperationResult())
 			{
-				adminId = result.getAccess();
+				Integer adminId = result.getAccess();
 
 				// El adminId es añadido a la sesión
 				request.getSession().setAttribute(Constants.SESSION_ATTR_ADMINID, adminId);
 
 				// TODO Añadir filtros de sesión (interceptor)
 				
-				return Constants.JSP_ADMIN_MAINMENU;
+				// return "redirect:" + Constants.URI_ADMIN_BASE + Constants.URI_ADMIN_MAINMENU;
+				return processAdminMainMenu();
 			}
 			else
 			{
@@ -152,5 +179,11 @@ public class ControllerInicio
 			model.addAttribute(Constants.MODEL_ATTR_ERROR, e);
 			return Constants.JSP_ADMIN_ERROR;
 		}
+	}
+	
+	@GetMapping(Constants.URI_ADMIN_BASE + Constants.URI_ADMIN_MAINMENU)
+	public String processAdminMainMenu()
+	{
+		return Constants.JSP_ADMIN_MAINMENU;
 	}
 }
