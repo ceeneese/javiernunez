@@ -11,6 +11,7 @@ public interface ServiceGrupoDocs
 	 * existe (su ID de grupo no está establecido), crea un nuevo grupo 
 	 * 
 	 * @param doc
+	 * @throws ServiceException
 	 */
 	public void saveGroup(GrupoDocumentos group) throws ServiceException;
 	
@@ -19,6 +20,7 @@ public interface ServiceGrupoDocs
 	 * 
 	 * @param groupId
 	 * @return El grupo de documentos solicitado, o 'null' en caso de que el grupo no sea encontrado
+	 * @throws ServiceException
 	 */
 	public GrupoDocumentos getGroup(int groupId) throws ServiceException;
 	
@@ -26,6 +28,7 @@ public interface ServiceGrupoDocs
 	 * Recupera los datos de todos los grupos de documentos del sistema
 	 * 
 	 * @return La lista de grupos de documentos
+	 * @throws ServiceException
 	 */
 	public List<GrupoDocumentos> getGroups() throws ServiceException;
 	
@@ -43,7 +46,7 @@ public interface ServiceGrupoDocs
 	 * @param groupId
 	 * @return 'true' si el grupo pudo ser borrado con éxito; 'false' en caso de que el grupo no
 	 * existiera previamente y por tanto no pudiera ser borrado del sistema
-	 * @throws DaoException En caso de producirse un error durante el proceso de borrado
+	 * @throws ServiceException En caso de producirse un error durante el proceso de borrado
 	 */
 	public boolean deleteGroup(int groupId) throws ServiceException;
 }

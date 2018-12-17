@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,69 +18,29 @@ import com.cenec.imfe.proyecto.model.DocumentInfo;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 
 @Controller
-@RequestMapping("/admin/doc")
+@RequestMapping(Constants.URI_BASE_ADMIN + Constants.URI_OVER_DOC)
 public class ControllerAdminDocs
 {
 	@Autowired
 	private ServiceDocumento srvcDocs;
-	
-	// TODO Controlar en todos los métodos que hay un usuario administrador válido en la sesión
 
-	@GetMapping("/new")
+	@GetMapping(Constants.URI_OPERATION_NEW)
 	public String processNewDoc(Model model)
 	{
-		return Constants.JSP_ADMIN_EDITDOC;
+		return processEditDoc0(null, model);
 	}
 	
-	@PostMapping("/save")
-	public String processSaveDoc(@RequestParam DocumentInfo doc, BindingResult result, Model model) throws Exception
+	@GetMapping(Constants.URI_OPERATION_EDIT)
+	public String processEditDoc(@RequestParam Integer docId, Model model)
 	{
-		// TODO Poner los valores de @Valid al bean DocumentInfo para que Spring pueda hacer el chequeo de campos
-		
-		// TODO Comprobar el BindingResult
-
-		try
-		{
-			if (doc.getIdDoc() != null)
-			{
-				// El documento no es nuevo, es una modificación 
-				DocumentInfo oldDoc = srvcDocs.getDocument(doc.getIdDoc());
-				
-				// Borrar el archivo anterior, si es que ha cambiado
-				File file = new File(oldDoc.getLocation());
-				if (file.exists())
-				{
-					file.delete();
-				}
-			}
-			
-			// TODO Falta subir y guardar el nuevo archivo
-			
-			srvcDocs.saveDocument(doc);
-
-			// TODO Poner en todos los JSP una label de mensaje para poder mostrar el resultado de operaciones. La label pueder tener
-			// el mismo nombre en todas las JSP de modo que sea cual sea se pueda establecer un valor desde cualquier controller
-
-			// TODO Internacionalizar
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento " + doc.getName() + " ha sido guardado");
-			
-			return processListDocs(model);
-		}
-		catch (Exception e)
-		{
-			model.addAttribute(Constants.MODEL_ATTR_ERROR, e);
-			return Constants.JSP_ADMIN_ERROR;
-		}
+		return processEditDoc0(docId, model);
 	}
 	
-	@GetMapping("/edit")
-	public String processEditDoc(@RequestParam Integer docId, Model model) throws Exception
+	private String processEditDoc0(Integer docId, Model model)
 	{
 		try
 		{
-			// TODO La JSP EditDoc debe tener en cuenta si es documento nuevo o editar uno ya existente
-			
-			DocumentInfo doc = srvcDocs.getDocument(docId);
+			DocumentInfo doc = (docId == null ? new DocumentInfo() : srvcDocs.getDocument(docId));
 
 			model.addAttribute(Constants.MODEL_ATTR_DOC, doc);
 			
@@ -91,9 +52,48 @@ public class ControllerAdminDocs
 			return Constants.JSP_ADMIN_ERROR;
 		}
 	}
+
+	@PostMapping(Constants.URI_OPERATION_SAVE)
+	public String processSaveDoc(@ModelAttribute DocumentInfo doc, BindingResult result, Model model)
+	{
+		// TODO Poner los valores de @Valid al bean DocumentInfo para que Spring pueda hacer el chequeo de campos
+		
+		// TODO Comprobar el BindingResult
+
+		try
+		{
+			// TODO Falta subir y guardar el nuevo archivo
+
+/*			if (doc.getIdDoc() != null)
+			{
+				// El documento no es nuevo, es una modificación 
+				DocumentInfo oldDoc = srvcDocs.getDocument(doc.getIdDoc());
+				
+				// Borrar el archivo anterior, si es que ha cambiado
+				File file = new File(oldDoc.getLocation());
+				if (file.exists())
+				{
+					file.delete();
+				}
+			}
+*/			
+			
+			srvcDocs.saveDocument(doc);
+
+			// TODO Internacionalizar
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento '" + doc.getName() + "' ha sido guardado");
+			
+			return processListDocs(model);
+		}
+		catch (Exception e)
+		{
+			model.addAttribute(Constants.MODEL_ATTR_ERROR, e);
+			return Constants.JSP_ADMIN_ERROR;
+		}
+	}
 	
-	@GetMapping("/list")
-	public String processListDocs(Model model) throws Exception
+	@GetMapping(Constants.URI_OPERATION_LIST)
+	public String processListDocs(Model model)
 	{
 		try
 		{
@@ -110,8 +110,8 @@ public class ControllerAdminDocs
 		}
 	}
 	
-	@GetMapping("/delete")
-	public String processDeleteDoc(@RequestParam Integer docId, Model model) throws Exception
+	@GetMapping(Constants.URI_OPERATION_DELETE)
+	public String processDeleteDoc(@RequestParam Integer docId, Model model)
 	{
 		try
 		{

@@ -12,10 +12,10 @@ public interface Constants
 	
 	// ATRIBUTOS DE 'Model' (ABSTRACCIÓN SPRING DE LA CLASE HttpServletRequest)
 	
-	// Atributo pasado a la JSP de error y que contiene la excepción generada
+	// Atributo pasado a las JSP de error y que contiene la excepción generada
 	String MODEL_ATTR_ERROR = "ModelAttrError";
 	
-	// Atributo pasado a la JSP de login que contiene un mensaje de información al usuario
+	// Atributo pasado a las JSP que contiene un mensaje de información al usuario
 	String MODEL_ATTR_RESULTMSG = "ModelAttrResultMsg";
 	
 	// Atributo pasado a la JSP de listado de documentos de usuario que contiene la lista de documentos
@@ -24,13 +24,19 @@ public interface Constants
 	
 	// Atributo pasado a la JSP de edición de usuarios que contiene el usuario a editar
 	// Atributo pasado a la JSP de login de usuario que contiene el usuario que accede
-	String MODEL_ATTR_USER = "modelAttrUser";
+	String MODEL_ATTR_USER = "ModelAttrUser";
+	
+	// Atributo pasado a la JSP de edición de usuarios que contiene los Ids de los grupos a los que esdtá suscrito el usuario
+	String MODEL_ATTR_CHECKEDGROUPIDS = "ModelAttrCheckedGroupsIds";
 
 	// Atributo pasado a la JSP de login de administrador que contiene el administrador que accede
-	String MODEL_ATTR_ADMIN = "modelAttrAdmin";
+	String MODEL_ATTR_ADMIN = "ModelAttrAdmin";
 
 	// Atributo pasado a la JSP de edición de grupos de documentos que contiene el grupo a editar
 	String MODEL_ATTR_GROUP = "ModelAttrGroup";
+
+	// Atributo pasado a la JSP de edición de grupos de documentos que contiene los Ids de los documentos que pertenecen al grupo
+	String MODEL_ATTR_CHECKEDDOCIDS = "ModelAttrCheckedDocsIds";
 
 	// Atributo pasado a la JSP de edición de documentos que contiene el documento a editar
 	String MODEL_ATTR_DOC = "ModelAttrDocument";
@@ -42,17 +48,35 @@ public interface Constants
 	// Atributo pasado a la JSP de edición de usuarios que contiene la lista de grupos (sólo nombres e IDs)
 	String MODEL_ATTR_GROUPSLIST = "ModelAttrGroupsList";
 
-	// DIRECCIONES URI DE CONTROLADORES
+	// DIRECCIONES URI DE VINCULACIÓN DE CONTROLADORES
 	
 	// TODO Poner todas las URI como constantes
 	
-	String URI_USER_BASE = "/user";
-	String URI_USER_LOGIN = "/login";
-	String URI_USER_DOCLIST = "/doclist";
+	String URI_BASE_USER = "/user";
 	
-	String URI_ADMIN_BASE = "/admin";
-	String URI_ADMIN_LOGIN = "/login";
-	String URI_ADMIN_MAINMENU = "/mainmenu";
+	String URI_OPERATION_LOGIN = "/login";
+	String URI_OPERATION_DOCLIST = "/doclist";
+	String URI_OPERATION_DOWNLOAD = "/download";
+	String URI_OPERATION_LOGOUT = "/logout";
+
+	String URI_USER_LOGIN = URI_BASE_USER + URI_OPERATION_LOGIN;
+	String URI_USER_DOCLIST = URI_BASE_USER + URI_OPERATION_DOCLIST;
+	String URI_USER_LOGOUT = URI_BASE_USER + URI_OPERATION_LOGOUT;
+
+	String URI_BASE_ADMIN = "/admin";
+	String URI_OVER_USER = "/user";
+	String URI_OVER_GROUP = "/group";
+	String URI_OVER_DOC = "/doc";
+
+	String URI_OPERATION_NEW = "/new";
+	String URI_OPERATION_EDIT = "/edit";
+	String URI_OPERATION_SAVE = "/save";
+	String URI_OPERATION_LIST = "/list";
+	String URI_OPERATION_DELETE = "/delete";
+
+	String URI_ADMIN_LOGIN = URI_BASE_ADMIN + URI_OPERATION_LOGIN;
+	String URI_ADMIN_MAINMENU = URI_BASE_ADMIN + "/mainmenu";
+	String URI_ADMIN_LOGOUT = URI_BASE_ADMIN + URI_OPERATION_LOGOUT;
 	
 	// NOMBRES DE LAS PÁGINAS JSP (EN SPRING NO SE USA LA EXTENSIÓN .jsp PORQUE EL BEAN InternalResourceViewResolver GESTIONA PREFIJOS Y SUFIJOS)
 	
@@ -71,7 +95,5 @@ public interface Constants
 	// TODO Esta JSP está casi vacía, hay que añadir la parte de subida de archivos
 	String JSP_ADMIN_EDITDOC = "JspAdminEditDocument";
 
-	// TODO Falta hacer esta JSP
 	String JSP_ADMIN_EDITUSER = "JspAdminEditUser";
-
 }

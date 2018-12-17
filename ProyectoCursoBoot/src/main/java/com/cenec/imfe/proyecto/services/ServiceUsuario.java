@@ -23,6 +23,7 @@ public interface ServiceUsuario
 	 * existe (su ID de usuario no está establecido), crea un nuevo usuario 
 	 *
 	 * @param usr
+	 * @throws ServiceException
 	 */
 	public void saveUsuario(Usuario usr) throws ServiceException;
 	
@@ -31,6 +32,7 @@ public interface ServiceUsuario
 	 *
 	 * @param access
 	 * @return El usuario solicitado, o 'null' en caso de que el usuario no sea encontrado
+	 * @throws ServiceException
 	 */
 	public Usuario getUsuario(AccessBy access) throws ServiceException;
 	
@@ -41,6 +43,7 @@ public interface ServiceUsuario
 	 * @return La lista de identificadores de los usuarios. Nótese que no todos los usuarios tienen asignado
 	 * un identificador de cliente o de usuario web, por lo que en caso de solicitar ese tipo de discriminador
 	 * es posible que no se listen todos los usuarios dados de alta en el sistema
+	 * @throws ServiceException
 	 */
 	public List<AccessBy> getUsuarios(AccessBy.AccessType type) throws ServiceException;
 
@@ -48,6 +51,7 @@ public interface ServiceUsuario
 	 * Recupera los datos de todos los usuarios del sistema
 	 * 
 	 * @return La lista de usuarios
+	 * @throws ServiceException
 	 */
 	public List<Usuario> getUsuarios() throws ServiceException;
 
@@ -57,7 +61,7 @@ public interface ServiceUsuario
 	 * @param access
 	 * @return 'true' si el usuario pudo ser borrado con éxito; 'false' en caso de que el usuario no
 	 * existiera previamente y por tanto no pudiera ser borrado del sistema
-	 * @throws DaoException En caso de producirse un error durante el proceso de borrado
+	 * @throws ServiceException En caso de producirse un error durante el proceso de borrado
 	 */
 	public boolean deleteUsuario(AccessBy access) throws ServiceException;
 

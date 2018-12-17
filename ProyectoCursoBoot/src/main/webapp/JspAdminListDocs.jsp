@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
-<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ page errorPage="JspAdminError.jsp"%>
+
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -15,30 +17,34 @@
 		<h1><spring:message code="jsp.admin.listdocs.body"/></h1>
 		<br><br>
 		
-		<!-- Constants 'MODEL_ATTR_RESULTMSG' -->
 		<!-- Mensaje a mostrar (en caso de que exista alguno) -->
-		<h3><label id="errorLabel">${ModelAttrResultMsg}</label></h3>
+		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
 		<br><br>		
 
 		<table>
-			<tr>
-				<th><spring:message code="jsp.admin.listdocs.tableheader.docname"/></th>
-				<th><spring:message code="jsp.admin.listdocs.tableheader.location"/></th>
-			</tr>
+			<thead>
+				<tr>
+					<th><spring:message code="jsp.admin.listdocs.tableheader.docname"/></th>
+					<th><spring:message code="jsp.admin.listdocs.tableheader.location"/></th>
+					<th><spring:message code="jsp.admin.listdocs.tableheader.modify"/></th>
+					<th><spring:message code="jsp.admin.listdocs.tableheader.delete"/></th>
+				</tr>
+			</thead>
 			
-			<!-- Constants.MODEL_ATTR_DOCSLIST -->
-			<c:forEach items="${ModelAttrDocsList}" var="doc">
-				
+			<tbody>
+				<!-- Constants.MODEL_ATTR_DOCSLIST -->
+				<c:forEach items="${ModelAttrDocsList}" var="doc">
 				<tr>
       				<td>${doc.name}</td>
      				<td>${doc.location}</td>
-					<td><a href="admin/doc/edit?idUser=${doc.idDoc}"><img src="images/modificar.png"/></a></td>
-					<td><a href="admin/doc/delete?idUser=${doc.idDoc}"><img src="images/borrar.png"/></a></td>
+					<td><a href="/admin/doc/edit?docId=${doc.idDoc}"><img src="images/modificar.png"/></a></td>
+					<td><a href="/admin/doc/delete?docId=${doc.idDoc}"><img src="images/borrar.png"/></a></td>
 				</tr>
-		</c:forEach>
-			
+				</c:forEach>
+			</tbody>
 		</table>
-		<br>		
+		<br>
+				
 		<a href="/admin/mainmenu"><spring:message code="jsp.admin.listdocs.back"/></a>
 	</body>
 </html>

@@ -1,11 +1,10 @@
 <%@page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="com.cenec.imfe.proyecto.Constants"%>
 
-<%@ page errorPage="JspError.jsp"%>
+<%@ page errorPage="JspUserError.jsp"%>
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 
 <!DOCTYPE html>
 
@@ -19,11 +18,10 @@
 		<h1><spring:message code="jsp.user.login.body"/></h1>
 		<br><br><br>
 		
-		<!-- TODO 'ModelAttrResultMsg' está declarado como constante 'MODEL_ATTR_RESULTMSG' en Constants -->
-		<!-- Mensaje de error a mostrar (en caso de que exista alguno) -->
-		<h3><label id="errorLabel">${ModelAttrResultMsg}</label></h3>
+		<!-- Mensaje a mostrar (en caso de que exista alguno) -->
+		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
 		
-		<form:form modelAttribute="modelAttrUser" action="/user/login" method="post">
+		<form:form modelAttribute="ModelAttrUser" action="/user/login" method="post">
 			<table>
 				<tr>
 					<td><spring:message code="jsp.user.login.nombre"/></td>
@@ -43,8 +41,7 @@
 
 		<br>
 		<br>
-		<!-- TODO 'inicio' está declarado como constante '' en Constants -->
-		<a href="inicio?lang=es"><spring:message code="idioma.es"/></a>
-		<a href="inicio?lang=en"><spring:message code="idioma.en"/></a>
+		<a href="/user/login?lang=es"><spring:message code="idioma.es"/></a>
+		<a href="/user/login?lang=en"><spring:message code="idioma.en"/></a>
 	</body>
 </html>

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -33,8 +34,12 @@ public class SpringConfiguration implements WebMvcConfigurer
 	}
 	
 	@Bean
-	public LocaleChangeInterceptor localeChangeInterceptor() {
-	    LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+	public LocaleChangeInterceptor localeChangeInterceptor()
+	{
+		// TODO En todas las páginas que se ponga el enlace de cambio de idioma, poner como URI la propia página para que se sepa 
+		// desde dónde se pulsó el cambio de idioma y se vuelva al mismo punto desde donde se hizo la llamada de cambio de idiona
+
+		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
 	    interceptor.setParamName("lang");
 	    return interceptor;
 	}
@@ -54,9 +59,14 @@ public class SpringConfiguration implements WebMvcConfigurer
 	}
 	
 	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
+	public void addInterceptors(InterceptorRegistry registry)
+	{
 	    registry.addInterceptor(localeChangeInterceptor());
-	    registry.addInterceptor(loginInterceptor());
+	    InterceptorRegistration reg = registry.addInterceptor(loginInterceptor());
+	    
+	    reg.excludePathPatterns("/css/*");
+	    reg.excludePathPatterns("*/images/*");
+	    reg.excludePathPatterns("/js/*");
 	}
 	
 	@Override

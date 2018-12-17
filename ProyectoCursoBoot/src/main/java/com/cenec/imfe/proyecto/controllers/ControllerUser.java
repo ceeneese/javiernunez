@@ -18,7 +18,7 @@ import com.cenec.imfe.proyecto.services.ServiceDocumento;
 import com.cenec.imfe.proyecto.services.ServiceUsuario;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping(Constants.URI_BASE_USER)
 public class ControllerUser
 {
 	@Autowired
@@ -38,8 +38,8 @@ public class ControllerUser
 	/**
 	 * Procesa la petición de listado de documentos para un usuario
 	 */
-	@GetMapping(Constants.URI_USER_DOCLIST)
-	public String processList(HttpServletRequest request, Model model) throws Exception
+	@GetMapping(Constants.URI_OPERATION_DOCLIST)
+	public String processList(HttpServletRequest request, Model model)
 	{
 		try
 		{
@@ -70,8 +70,8 @@ public class ControllerUser
 	/**
 	 * Procesa la petición de descarga de un documento para un usuario
 	 */
-	@GetMapping("/download")
-	public String processDownload(@RequestParam Integer docId, HttpServletRequest request, Model model) throws Exception
+	@GetMapping(Constants.URI_OPERATION_DOWNLOAD)
+	public String processDownload(@RequestParam Integer docId, HttpServletRequest request, Model model)
 	{
 		// El userId es obtenido de la sesión
 		Integer userId = (Integer)request.getSession().getAttribute(Constants.SESSION_ATTR_USERID);

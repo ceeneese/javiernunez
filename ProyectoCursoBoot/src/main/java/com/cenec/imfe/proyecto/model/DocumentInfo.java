@@ -89,4 +89,10 @@ public class DocumentInfo
 	{
 		return (idDoc == null ? 1 : idDoc.hashCode());
 	}
+	
+	@Override
+	public String toString()
+	{
+		return this.idDoc + this.name;
+	}
 }

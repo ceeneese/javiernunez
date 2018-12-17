@@ -107,4 +107,10 @@ public class GrupoDocumentos
 	{
 		return (id == null ? 1 : id.hashCode());
 	}
+	
+	@Override
+	public String toString()
+	{
+		return nombre + "-" + documentos.toString();
+	}
 }

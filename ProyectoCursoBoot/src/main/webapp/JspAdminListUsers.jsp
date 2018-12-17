@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
-<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ page errorPage="JspAdminError.jsp"%>
+
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -15,26 +17,28 @@
 		<h1><spring:message code="jsp.admin.listusers.body"/></h1>
 		<br><br>
 
-		<!-- Constants 'MODEL_ATTR_RESULTMSG' -->
-		<!-- Mensaje de error a mostrar (en caso de que exista alguno) -->
-		<h3><label id="errorLabel">${ModelAttrResultMsg}</label></h3>
+		<!-- Mensaje a mostrar (en caso de que exista alguno) -->
+		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
 		<br><br>		
 		
 		<table>
-			<tr>
-				<th><spring:message code="jsp.admin.listusers.tableheader.clientid"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.username"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.usercity"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.userprovince"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.userphone"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.usermobile"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.usermail"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.modify"/></th>
-				<th><spring:message code="jsp.admin.listusers.tableheader.delete"/></th>
-			</tr>
+			<thead>
+				<tr>
+					<th><spring:message code="jsp.admin.listusers.tableheader.clientid"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.username"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.usercity"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.userprovince"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.userphone"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.usermobile"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.usermail"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.modify"/></th>
+					<th><spring:message code="jsp.admin.listusers.tableheader.delete"/></th>
+				</tr>
+			</thead>
 			
-			<!-- Constants.MODEL_ATTR_USERSLIST -->
-			<c:forEach items="${ModelAttrUsersList}" var="user">
+			<tbody>			
+				<!-- Constants.MODEL_ATTR_USERSLIST -->
+				<c:forEach items="${ModelAttrUsersList}" var="user">
 				
 				<c:choose>
 					<c:when test = "${user.idCliente != null}">
@@ -54,11 +58,11 @@
      				<td>${user.tfnoFijo}</td>
      				<td>${user.tfnoMovil}</td>
      				<td>${user.correo_e}</td>
-					<td><a href="admin/user/edit?idUser=${user.idCliente}"><img src="images/modificar.png"/></a></td>
-					<td><a href="admin/user/delete?idUser=${user.idCliente}"><img src="images/borrar.png"/></a></td>
+					<td><a href="/admin/user/edit?idUser=${user.idUsuario}"><img src="images/modificar.png"/></a></td>
+					<td><a href="/admin/user/delete?idUser=${user.idUsuario}"><img src="images/borrar.png"/></a></td>
 				</tr>
-		</c:forEach>
-			
+				</c:forEach>
+			</tbody>
 		</table>
 		<br>		
 		<a href="/admin/mainmenu"><spring:message code="jsp.admin.listusers.back"/></a>

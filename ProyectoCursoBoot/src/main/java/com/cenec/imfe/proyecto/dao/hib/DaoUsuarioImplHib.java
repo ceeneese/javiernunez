@@ -93,34 +93,14 @@ public class DaoUsuarioImplHib implements DaoUsuario
 				break;
 		}
 		
-		// TODO Comprobar por qué esta sentencia SELECT no funciona
-
 		StringBuffer hqlSelect = new StringBuffer(50).append(HQL_SELECT_ALL).
 				append(" AS u WHERE u.").append(attrName).append(" = :param");
 
 		@SuppressWarnings("unchecked")
 		Query<Usuario> query = (Query<Usuario>)this.hibernateSessionFactory.getCurrentSession().createQuery(hqlSelect.toString());
 		query.setParameter("param", paramValue);
-		return (Usuario)query.uniqueResult();
 
-/*		@SuppressWarnings("unchecked")
-		List<Usuario> list = this.hibernateSessionFactory.getCurrentSession().createQuery(HQL_SELECT_ALL).list();
-		
-		int idx = 0;
-		while (idx < list.size())
-		{
-			Usuario usr = list.get(idx);
-			
-			if (usr.getUsrAccesoWeb().equals(paramValue))
-			{
-				return usr;
-			}
-			
-			idx++;
-		}
-		
-		return null;
-*/
+		return (Usuario)query.uniqueResult();
 	}
 
 	@Override

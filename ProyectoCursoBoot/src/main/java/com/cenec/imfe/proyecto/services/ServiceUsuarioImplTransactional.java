@@ -1,6 +1,7 @@
 package com.cenec.imfe.proyecto.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -110,23 +111,16 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 			AccessByUsr access = new AccessByUsr(userId);
 			Usuario usr = dao.getUsuario(access);
 			
-			List<DocumentInfo> result = new ArrayList<DocumentInfo>(5);
+			// Se una un set para evitar añadir documentos duplicados
+			Set<DocumentInfo> result = new HashSet<DocumentInfo>(5);
 			
 			for (GrupoDocumentos grupo : usr.getGrupos())
 			{
 				Set<DocumentInfo> docs = grupo.getDocumentos();
-				
-				for (DocumentInfo doc : docs)
-				{
-					// Evitamos añadir documentos duplicados
-					if (!result.contains(doc))
-					{
-						result.add(doc);
-					}
-				}
+				result.addAll(docs);
 			}
 			
-			return result;
+			return new ArrayList<DocumentInfo>(result);
 		}
 		catch (Exception e)
 		{

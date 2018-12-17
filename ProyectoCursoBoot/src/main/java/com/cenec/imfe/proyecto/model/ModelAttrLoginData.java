@@ -5,12 +5,12 @@ package com.cenec.imfe.proyecto.model;
  * @author Javier
  *
  */
-public class ModelAttrLoginUser
+public class ModelAttrLoginData
 {
 	private String usr;
 	private String pwd;
 	
-	public ModelAttrLoginUser()
+	public ModelAttrLoginData()
 	{
 		super();
 	}

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
-<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ page errorPage="JspAdminError.jsp"%>
+
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -17,24 +19,28 @@
 		
 		<!-- Constants 'MODEL_ATTR_RESULTMSG' -->
 		<!-- Mensaje a mostrar (en caso de que exista alguno) -->
-		<h3><label id="errorLabel">${ModelAttrResultMsg}</label></h3>
+		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
 		<br><br>		
 
 		<table>
-			<tr>
-				<th><spring:message code="jsp.admin.listgroups.tableheader.groupname"/></th>
-			</tr>
-			
-			<!-- Constants.MODEL_ATTR_GROUPSLIST -->
-			<c:forEach items="${ModelAttrGroupsList}" var="group">
-				
+			<thead>
 				<tr>
-      				<td>${group.name}</td>
-					<td><a href="admin/group/edit?idUser=${group.id}"><img src="images/modificar.png"/></a></td>
-					<td><a href="admin/group/delete?idUser=${group.id}"><img src="images/borrar.png"/></a></td>
+					<th><spring:message code="jsp.admin.listgroups.tableheader.groupname"/></th>
+					<th><spring:message code="jsp.admin.listgroups.tableheader.modify"/></th>
+					<th><spring:message code="jsp.admin.listgroups.tableheader.delete"/></th>
 				</tr>
-		</c:forEach>
+			</thead>
 			
+			<tbody>
+				<!-- Constants.MODEL_ATTR_GROUPSLIST -->
+				<c:forEach items="${ModelAttrGroupsList}" var="group">
+				<tr>
+      				<td>${group.nombre}</td>
+					<td><a href="/admin/group/edit?groupId=${group.id}"><img src="/resources/images/Modificar.png"/></a></td>
+					<td><a href="/admin/group/delete?groupId=${group.id}"><img src="/src/main/resources/images/Borrar.png"/></a></td>
+				</tr>
+				</c:forEach>
+			</tbody>
 		</table>
 		<br>		
 		<a href="/admin/mainmenu"><spring:message code="jsp.admin.listgroups.back"/></a>

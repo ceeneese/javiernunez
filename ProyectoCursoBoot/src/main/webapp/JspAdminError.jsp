@@ -15,7 +15,7 @@
 
 		<spring:message code="jsp.admin.error.message"/>
 		<br>
-		${error}
+		${ModelAttrError}
 		<br><br>
 		
 		<!-- TODO 'inicio' está definido como constante -->
