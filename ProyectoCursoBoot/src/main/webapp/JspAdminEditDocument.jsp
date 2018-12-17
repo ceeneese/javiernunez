@@ -37,7 +37,7 @@
 		<%-- Mensaje a mostrar (en caso de que exista alguno) --%>
 		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
 
-		<form:form modelAttribute="ModelAttrDocument" method="POST" action="/admin/doc/save">
+		<form:form modelAttribute="ModelAttrDocument" method="POST" action="/admin/doc/save" enctype="multipart/form-data">
 			
 			<form:hidden path="idDoc"/>
 			
@@ -45,25 +45,26 @@
 				<tr>
 					<td><spring:message code="jsp.admin.editdoc.docname"/></td>
 					<td><form:input path="name"/></td>
-					<td><form:errors path="name" cssClass="error" /></td>
+					<td><form:errors path="name" cssClass="error"/></td>
 				</tr>
-				
+<%--
 				<tr>
 					<td><spring:message code="jsp.admin.editdoc.file"/></td>
 					<td><form:input path="location"/></td>
-					<td><form:errors path="location" cssClass="error" /></td>
+					<td><form:errors path="location" cssClass="error"/></td>
 				</tr>
-
-				<%-- TODO Falta poner el botón de subida de archivo 
-				
+-->
+				<%-- Sólo se permite subir un archivo cuando se trata de nuevo documento.
+				     Para modificaciones sólo se permite cambiar el nombre --%>
+				<c:if test="${ModelAttrDocument.idDoc == null}">
 				<tr>
 					<td><spring:message code="jsp.admin.editdoc.file"/></td>
-					<td><form:input type = "file" path="location___MAL" /></td>
-					<td><form:errors path="location___MAL" cssClass="error" /></td>
-				</tr>  --%>
-			<tr>
-				<td><input type="submit" value="<spring:message code="jsp.admin.editdoc.submit"/>"/></td>
-			</tr>
+					<td><input type="file" name="file"></td>
+				</tr>
+				</c:if>
+				<tr>
+					<td><input type="submit" value="<spring:message code="jsp.admin.editdoc.submit"/>"/></td>
+				</tr>
 		</table>
 		</form:form>
 		

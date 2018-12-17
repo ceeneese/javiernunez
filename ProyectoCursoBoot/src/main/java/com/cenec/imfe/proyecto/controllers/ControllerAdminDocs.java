@@ -1,7 +1,9 @@
 package com.cenec.imfe.proyecto.controllers;
 
-import java.io.File;
+
 import java.util.List;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,17 +14,26 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cenec.imfe.proyecto.Constants;
 import com.cenec.imfe.proyecto.model.DocumentInfo;
+import com.cenec.imfe.proyecto.services.FileAccessorImplSpring;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 
 @Controller
 @RequestMapping(Constants.URI_BASE_ADMIN + Constants.URI_OVER_DOC)
 public class ControllerAdminDocs
 {
+	// Ruta donde se almacenarán los documentos demtro del servidor
+	private final static String DOCUMENTS_PATH = "/documentos";
+	
 	@Autowired
 	private ServiceDocumento srvcDocs;
+	
+	@Autowired
+	private ServletContext context;
+
 
 	@GetMapping(Constants.URI_OPERATION_NEW)
 	public String processNewDoc(Model model)
@@ -54,31 +65,29 @@ public class ControllerAdminDocs
 	}
 
 	@PostMapping(Constants.URI_OPERATION_SAVE)
-	public String processSaveDoc(@ModelAttribute DocumentInfo doc, BindingResult result, Model model)
+	public String processSaveDoc(@ModelAttribute DocumentInfo doc, @RequestParam(name="file") MultipartFile mpFile, 
+			BindingResult result, Model model)
 	{
-		// TODO Poner los valores de @Valid al bean DocumentInfo para que Spring pueda hacer el chequeo de campos
-		
-		// TODO Comprobar el BindingResult
-
 		try
 		{
-			// TODO Falta subir y guardar el nuevo archivo
-
-/*			if (doc.getIdDoc() != null)
-			{
-				// El documento no es nuevo, es una modificación 
-				DocumentInfo oldDoc = srvcDocs.getDocument(doc.getIdDoc());
-				
-				// Borrar el archivo anterior, si es que ha cambiado
-				File file = new File(oldDoc.getLocation());
-				if (file.exists())
-				{
-					file.delete();
-				}
-			}
-*/			
+			// TODO Poner los valores de @Valid al bean DocumentInfo para que Spring pueda hacer el chequeo de campos
 			
-			srvcDocs.saveDocument(doc);
+			// TODO Comprobar el BindingResult
+			
+			if (doc.getIdDoc() != null)
+			{
+				// Actualización de archivo (sólo nombre), no archivo nuevo
+				srvcDocs.updateDocument(doc);
+			}
+			
+			if (mpFile != null && mpFile.getOriginalFilename() != null && !mpFile.getOriginalFilename().isEmpty())
+			{
+		        String filePath = context.getRealPath(DOCUMENTS_PATH + mpFile.getOriginalFilename());
+		        
+		        FileAccessorImplSpring accessor = new FileAccessorImplSpring(mpFile, filePath);
+		        
+				srvcDocs.saveNewDocument(doc, accessor);
+			}
 
 			// TODO Internacionalizar
 			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento '" + doc.getName() + "' ha sido guardado");
@@ -116,8 +125,6 @@ public class ControllerAdminDocs
 		try
 		{
 			// TODO Poner una alerta en la JSP antes de llamar a este método
-
-			// TODO Falta borrar archivo
 			
 			boolean deleted = srvcDocs.deleteDocument(docId);
 

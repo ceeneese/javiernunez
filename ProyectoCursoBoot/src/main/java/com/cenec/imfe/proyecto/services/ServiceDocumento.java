@@ -7,13 +7,21 @@ import com.cenec.imfe.proyecto.model.DocumentInfo;
 public interface ServiceDocumento
 {
 	/**
-	 * Almacena un documento en el sistema. Si el documento ya existe, actualiza sus datos; si no
-	 * existe (su ID de documento no está establecido), crea un nuevo documento 
+	 * Almacena un nuevo documento en el sistema. El documento ha de ser nuevo (su ID de documento no está establecido) 
 	 * 
 	 * @param doc
+	 * @param El objeto accessor para acceder al documento
 	 * @throws ServiceException En caso de producirse un error durante el proceso de guardado del documento
 	 */
-	public void saveDocument(DocumentInfo doc) throws ServiceException;
+	public void saveNewDocument(DocumentInfo doc, FileAccessor accessor) throws ServiceException;
+	
+	/**
+	 * Actualiza los datos de un documento en el sistema. El documento ya ha de existir y el documento asociado no se modifica
+	 * 
+	 * @param doc
+	 * @throws ServiceException En caso de producirse un error durante la actualización del documento
+	 */
+	public void updateDocument(DocumentInfo doc) throws ServiceException;
 	
 	/**
 	 * Recupera los datos de un documento
