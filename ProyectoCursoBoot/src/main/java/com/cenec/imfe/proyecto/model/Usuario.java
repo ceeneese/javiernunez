@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "usuario")
@@ -28,9 +30,11 @@ public class Usuario
 	@Column(name = "idCliente", nullable = true, unique = true)	
 	private Integer idCliente;
 	
+	@NotNull
 	@Column(name = "fechaAlta", nullable = false)	
 	private Date fechaAlta;
 	
+	@NotEmpty
 	@Column(name = "nombre", nullable = true)	
 	private String nombre;
 	
@@ -55,10 +59,12 @@ public class Usuario
 	@Column(name = "correo", nullable = true)	
 	private String correo_e;
 	
-	@Column(name = "usrAcceso", nullable = true, unique = true)	
+	@NotEmpty
+	@Column(name = "usrAcceso", nullable = false, unique = true)	
 	private String usrAccesoWeb;
 	
-	@Column(name = "pwdAcceso", nullable = true)	
+	@NotEmpty
+	@Column(name = "pwdAcceso", nullable = false)	
 	private String pwdAccesoWeb;
 	
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })

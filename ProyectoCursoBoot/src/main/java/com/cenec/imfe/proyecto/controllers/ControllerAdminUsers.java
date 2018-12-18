@@ -7,12 +7,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -28,6 +31,11 @@ import com.cenec.imfe.proyecto.model.Usuario;
 import com.cenec.imfe.proyecto.services.ServiceGrupoDocs;
 import com.cenec.imfe.proyecto.services.ServiceUsuario;
 
+/**
+ * Controlador de administración encargado de atender las peticiones relacionadas con usuarios
+ *  
+ * @author Javier
+ */
 @Controller
 @RequestMapping(Constants.URI_BASE_ADMIN + Constants.URI_OVER_USER)
 public class ControllerAdminUsers
@@ -41,50 +49,92 @@ public class ControllerAdminUsers
 	@Autowired  
     private MessageSource messageSource;
 	
+	/**
+	 * Registro de vinculador para gestión de formatos de fecha
+	 * 
+	 * @param binder
+	 */
 	@InitBinder
-	private void initBinder(WebDataBinder binder) {
+	private void initBinder(WebDataBinder binder)
+	{
 		//Se encarga de parsear las fechas correctamente cuando vienen de formulario
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 	}
 
+	/**
+	 * Método encargado de recibir las peticiones de creación de un nuevo usuario
+	 * 
+	 * Este método es invocado desde la JSP de menú principal.
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/user/new
+	 * 
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@GetMapping(Constants.URI_OPERATION_NEW)
 	public String processNewUser(Model model, Locale locale)
 	{
-		return processEditUser0(null, model, locale);
+		Usuario user = new Usuario();
+		user.setFechaAlta(new Date()); // Se da por defecto el día actual como fecha de alta
+
+		return processEditUser0(user, model, locale);
 	}
 	
+	/**
+	 * Método encargado de recibir las peticiones de edición de usuarios
+	 * 
+	 * Este método es invocado desde la JSP de listado de usuarios.
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/user/edit
+	 * 
+	 * @param idUser Identificador del usuario a editar
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@GetMapping(Constants.URI_OPERATION_EDIT)
 	public String processEditUser(@RequestParam Integer idUser, Model model, Locale locale)
 	{
-		return processEditUser0(idUser, model, locale);
+		try
+		{
+			AccessBy.AccessByUsr access = new AccessBy.AccessByUsr(idUser);
+			Usuario user = srvcUsuario.getUsuario(access);
+
+			return processEditUser0(user, model, locale);
+		}
+		catch (Exception e)
+		{
+			model.addAttribute(Constants.MODEL_ATTR_ERROR, e);
+			return Constants.JSP_ADMIN_ERROR;
+		}
 	}
 
 	/**
-	 * Método para unificar las llamadas a 'new' y 'edit'
+	 * Método para unificar las llamadas a 'new' y 'edit' de usuarios
 	 * 
-	 * @param idUser El ID del usuario a editar (null si es creación de un nuevo usuario)
-	 * @param model
-	 * @param locale
+	 * @param user El usuario a editar
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Llamada a la JSP de edición de usuarios
 	 */
-	private String processEditUser0(Integer idUser, Model model, Locale locale)
+	private String processEditUser0(Usuario user, Model model, Locale locale)
 	{
 		try
 		{
 			List<Integer> listOfGroupIds;
-			Usuario user;
 			
-			if (idUser == null)
+			if (user.getIdUsuario() == null)
 			{
-				user = new Usuario();
 				listOfGroupIds = new ArrayList<Integer>(0);
 			}
 			else
 			{
-				AccessBy.AccessByUsr access = new AccessBy.AccessByUsr(idUser);
-				user = srvcUsuario.getUsuario(access);
-
 				listOfGroupIds = new ArrayList<Integer>();
 				
 				for (GrupoDocumentos group : user.getGrupos())
@@ -109,15 +159,45 @@ public class ControllerAdminUsers
 		}
 	}
 	
+	/**
+	 * Método encargado de recibir las peticiones de guardado de un usuario
+	 * 
+	 * Este método es invocado desde la JSP de edición de usuario.
+	 * 
+	 * Método HTTP: POST
+	 * 
+	 * URI de llamada: /admin/user/save
+	 * 
+	 * Nota: las tildes de los campos de datos se reciben correctamente indicando UTF-8 en las JSP
+	 * 
+	 * @param user Datos del usuario
+	 * @param result Resultado de validación de datos
+	 * @param checkedGroups Lista de los identificadores de grupos de documentos visibles para el usuario
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@PostMapping(Constants.URI_OPERATION_SAVE)
-	public String processSaveUser(@ModelAttribute Usuario user, @RequestParam(required=false) String checkedGroups,
-			BindingResult result, Model model, Locale locale)
+	public String processSaveUser(@Valid @ModelAttribute Usuario user, BindingResult result,
+			@RequestParam(required=false) String checkedGroups, Model model, Locale locale)
 	{
-		// TODO Poner los valores de @Valid al bean Usuario para que Spring pueda hacer el chequeo de campos
+		// Comprobar el BindingResult
+		if (result.hasErrors())
+		{
+			List<FieldError> errors = result.getFieldErrors();
+			
+			// TODO Internacionalizar
+			String errorStr = "Campos erróneos: ";
+			for (FieldError fe : errors)
+			{
+				errorStr = errorStr + " -" + fe.getField();
+			}
+			
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, errorStr);
+			
+			return processEditUser0(user, model, locale);
+		}
 		
-		// TODO Comprobar el BindingResult
-		
-		// TODO Si los campos tienen tildes, se muestran bien en la JSP pero se reciben mal en el ModelAttribute
 
 		try
 		{
@@ -145,10 +225,10 @@ public class ControllerAdminUsers
 				}
 			}
 */
-				// TODO El bucle de abajo funciona, el de arriba no porque los grupos
+				// NOTA: El bucle de abajo funciona, el de arriba no porque los grupos
 				// son obtenidos en distintas sesiones por lo que los documentos que
 				// pertenecen a ambos grupos son considerados "diferentes" por Hibernate
-				
+				//
 				// http://cursohibernate.es/doku.php?id=unidades:06_objetos_validaciones:01_trabajando_objetos
 				// https://stackoverflow.com/questions/1074081/hibernate-error-org-hibernate-nonuniqueobjectexception-a-different-object-with
 				
@@ -173,7 +253,14 @@ public class ControllerAdminUsers
 			return Constants.JSP_ADMIN_ERROR;
 		}
 	}
-		
+	
+	/**
+	 * Busca el grupo cuyo identificador pasado por parámetro dentro de la lista de grupos
+	 * 
+	 * @param id El identificador del grupo a buscar
+	 * @param list La lista de grupos
+	 * @return El grupo solicitado
+	 */
 	private GrupoDocumentos searchGroup(Integer id, List<GrupoDocumentos> list)
 	{
 		for (GrupoDocumentos g : list)
@@ -188,6 +275,18 @@ public class ControllerAdminUsers
 		return null;
 	}
 	
+	/**
+	 * Método encargado de recibir las peticiones de listado de usuarios
+	 * 
+	 * Este método es invocado desde la JSP de menú principal
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/user/list 
+	 * 
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@GetMapping(Constants.URI_OPERATION_LIST)
 	public String processListUsers(Model model)
 	{
@@ -206,13 +305,24 @@ public class ControllerAdminUsers
 		}
 	}
 	
+	/**
+	 * Método encargado de recibir las peticiones de borrado de usuarios
+	 * 
+	 * Este método es invocado desde la JSP de listado de usuarios
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/user/delete
+	 * 
+	 * @param idUser Identificador del usuario a borrar
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@GetMapping(Constants.URI_OPERATION_DELETE)
 	public String processDeleteUser(@RequestParam Integer idUser, Model model)
 	{
 		try
 		{
-			// TODO Poner una alerta en la JSP antes de llamar a este método
-			
 			AccessBy.AccessByUsr access = new AccessBy.AccessByUsr(idUser);
 			boolean deleted = srvcUsuario.deleteUsuario(access);
 

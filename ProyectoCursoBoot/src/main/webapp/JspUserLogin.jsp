@@ -1,4 +1,4 @@
-<%@page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.cenec.imfe.proyecto.Constants"%>
 
 <%@ page errorPage="JspUserError.jsp"%>
@@ -10,7 +10,7 @@
 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="jsp.user.login.title"/></title>
 	</head>
 
@@ -25,11 +25,13 @@
 			<table>
 				<tr>
 					<td><spring:message code="jsp.user.login.nombre"/></td>
-					<td><form:input path="usr"/></td>
+					<td><form:input path="nombre"/></td>
+					<td><form:errors path="nombre"/></td>
 				</tr>
 				<tr>
 					<td><spring:message code="jsp.user.login.pwd"/></td>
-					<td><form:password path="pwd"/></td>
+					<td><form:password path="clave"/></td>
+					<td><form:errors path="clave"/></td>
 				</tr>
 			</table>
 			<br>

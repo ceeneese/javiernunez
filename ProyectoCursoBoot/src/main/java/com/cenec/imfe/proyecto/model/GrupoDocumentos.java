@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "grupodocumentos")
@@ -24,6 +25,7 @@ public class GrupoDocumentos
 	@Column(name = "idGrupo", unique = true, nullable = false)	
 	private Integer id;
 	
+	@NotEmpty
 	@Column(name = "nombre", nullable = false)	
 	private String nombre;
 	

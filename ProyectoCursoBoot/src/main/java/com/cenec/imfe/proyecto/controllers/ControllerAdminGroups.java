@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,11 @@ import com.cenec.imfe.proyecto.model.GrupoDocumentos;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 import com.cenec.imfe.proyecto.services.ServiceGrupoDocs;
 
+/**
+ * Controlador encargado de atender las peticiones relacionadas con grupos de documentos
+ *  
+ * @author Javier
+ */
 @Controller
 @RequestMapping(Constants.URI_BASE_ADMIN + Constants.URI_OVER_GROUP)
 public class ControllerAdminGroups
@@ -32,12 +38,41 @@ public class ControllerAdminGroups
 	@Autowired
 	private ServiceDocumento srvcDocs;
 	
+	/**
+	 * Método encargado de recibir las peticiones de creación de un nuevo grupo de documentos
+	 * 
+	 * Este método es invocado desde la JSP de menú principal.
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/group/new
+	 * 
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP de edición de grupos
+	 */
 	@GetMapping(Constants.URI_OPERATION_NEW)
 	public String processNewGroup(Model model)
 	{
 		return processEditGroup0(null, model);
 	}
 
+	/**
+	 * Método encargado de recibir las peticiones de edición de un grupo de documentos
+	 * 
+	 * Este método es invocado desde la JSP de listado de grupos de documentos.
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/doc/edit
+	 *
+	 * @param docId Identificador del documento a editar
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP de edición de documentos
+	 * 
+	 * @param groupId
+	 * @param model
+	 * @return
+	 */
 	@GetMapping(Constants.URI_OPERATION_EDIT)
 	public String processEditGroup(@RequestParam Integer groupId, Model model)
 	{
@@ -89,12 +124,41 @@ public class ControllerAdminGroups
 		}
 	}
 	
+	/**
+	 * Método encargado de recibir las peticiones de guardado de un grupo de documentos
+	 * 
+	 * Este método es invocado desde la JSP de edición de grupos de documentos.
+	 * 
+	 * Método HTTP: POST
+	 * 
+	 * URI de llamada: /admin/group/save 
+	 * 
+	 * @param grp Datos del grupo de documentos
+	 * @param result Resultado de validación de datos
+	 * @param checkedDocs Lista de los identificadores de documentos incluidos en el grupo
+	 * @param req Petición HTTP para el acceso a datos no incluidos en el modelo Spring
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@PostMapping(Constants.URI_OPERATION_SAVE)
-	public String processSaveGroup(@ModelAttribute GrupoDocumentos grp, @RequestParam(required=false) String checkedDocs, BindingResult result, HttpServletRequest req, Model model)
+	public String processSaveGroup(@Valid @ModelAttribute GrupoDocumentos grp, BindingResult result,
+		@RequestParam(required=false) String checkedDocs, HttpServletRequest req, Model model)
 	{
-		// TODO Poner los valores de @Valid al bean GrupoDocumentos para que Spring pueda hacer el chequeo de campos
-		
-		// TODO Comprobar el BindingResult
+		// Comprobamos el BindingResult
+		if (result.hasErrors())
+		{
+			// TODO Internacionalizar
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "Error en los datos del grupo de documentos");
+			
+			if (grp.getId() == null)
+			{
+				return processNewGroup(model);
+			}
+			else
+			{
+				return processEditGroup(grp.getId(), model);
+			}
+		}
 
 		try
 		{
@@ -131,6 +195,18 @@ public class ControllerAdminGroups
 		}
 	}
 	
+	/**
+	 * Método encargado de recibir las peticiones de listado de grupos de documentos
+	 * 
+	 * Este método es invocado desde la JSP de menú principal
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/group/list 
+	 * 
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@GetMapping(Constants.URI_OPERATION_LIST)
 	public String processListGroups(Model model)
 	{
@@ -149,13 +225,24 @@ public class ControllerAdminGroups
 		}
 	}
 
+	/**
+	 * Método encargado de recibir las peticiones de borrado de grupos de documentos
+	 * 
+	 * Este método es invocado desde la JSP de menú principal
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/group/delete
+	 * 
+	 * @param groupId Identificador del grupo de documentos a borrar
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP a invocar tras la operación
+	 */
 	@GetMapping(Constants.URI_OPERATION_DELETE)
 	public String processDeleteGroup(@RequestParam Integer groupId, Model model)
 	{
 		try
 		{
-			// TODO Poner una alerta en la JSP antes de llamar a este método
-			
 			boolean deleted = srvcGroupDocs.deleteGroup(groupId);
 
 			// TODO Internacionalizar

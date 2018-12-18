@@ -17,6 +17,11 @@ import com.cenec.imfe.proyecto.services.OperationResult;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 import com.cenec.imfe.proyecto.services.ServiceUsuario;
 
+/**
+ * Controlador encargado de atender las peticiones de usuarios
+ * 
+ * @author Javier
+ */
 @Controller
 @RequestMapping(Constants.URI_BASE_USER)
 public class ControllerUser
@@ -37,13 +42,24 @@ public class ControllerUser
 
 	/**
 	 * Procesa la petición de listado de documentos para un usuario
+	 * 
+	 * Este método es invocado tras el acceso de un usuario al sistema
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /user/doclist
+	 *
+	 * @param request Petición HTTP
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return
 	 */
 	@GetMapping(Constants.URI_OPERATION_DOCLIST)
 	public String processList(HttpServletRequest request, Model model)
 	{
 		try
 		{
-			// El userId es obtenido de la sesión
+			// El userId es obtenido de la sesión (nota: esto es por probar diferentes formas de
+			// acceso a la sesión, en otros casos he accedido a atributos de sesión a través de Model)
 			Integer userId = (Integer)request.getSession().getAttribute(Constants.SESSION_ATTR_USERID);
 			
 			// Controlar acceso directo a 'doclist' sin usuario en la sesión
@@ -69,6 +85,17 @@ public class ControllerUser
 
 	/**
 	 * Procesa la petición de descarga de un documento para un usuario
+	 * 
+	 * Este método es invocado desde el listado de documentos disponibles para el usuario
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /user/download
+	 *
+	 * @param docId El identificador del documento a descargar
+	 * @param request Petición HTTP
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Página JSP de listado de documentos
 	 */
 	@GetMapping(Constants.URI_OPERATION_DOWNLOAD)
 	public String processDownload(@RequestParam Integer docId, HttpServletRequest request, Model model)
@@ -105,7 +132,7 @@ public class ControllerUser
 				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, result.getError());
 			}
 			
-			return Constants.JSP_USER_LISTDOCS;
+			return processList(request, model);
 		}
 		catch (Exception e)
 		{

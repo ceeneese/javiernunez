@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page errorPage="JspAdminError.jsp"%>
 
@@ -11,11 +11,11 @@
 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="jsp.admin.editgroup.title"/></title>
 	</head>
 	
-	<%-- A esta JSP le llega MODEL_ATTR_DOCSLIST, y además un atributo MODEL_ATTR_GROUP que puede estar vacío en el caso de nuevo grupo --%>
+	<%-- A esta JSP le llega MODEL_ATTR_DOCSLIST, y ademÃ¡s un atributo MODEL_ATTR_GROUP que puede estar vacÃ­o en el caso de nuevo grupo --%>
 
 	<script>
 	
@@ -38,7 +38,7 @@
 		<br><h1>
 		<c:choose>
 			<c:when test = "${ModelAttrGroup.id != null}">
-				<%-- Estamos en modo de edición de grupo ya existente --%>
+				<%-- Estamos en modo de ediciÃ³n de grupo ya existente --%>
 				<spring:message code="jsp.admin.editgroup.body.edit"/> '${ModelAttrGroup.nombre}'
 				<c:set var="backhref" value="/admin/group/list"/>
 				<spring:message code="jsp.admin.editgroup.back.list" var="msgcode"/>

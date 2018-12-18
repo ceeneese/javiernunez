@@ -1,9 +1,15 @@
 package com.cenec.imfe.proyecto.controllers;
 
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +35,18 @@ public class ControllerInicio
 	@Autowired
 	private ServiceAdministrador srvcAdmin;
 	
+	/**
+	 * Método encargado de recibir las peticiones de acceso como usuario
+	 * 
+	 * Este método es invocado desde el inicio de la aplicación web.
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /user/login
+	 *
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP de login de usuario
+	 */
     @GetMapping(Constants.URI_USER_LOGIN)
     public String processUserLogin(Model model)
     {
@@ -47,21 +65,41 @@ public class ControllerInicio
     }
     
 	/**
+	 * Método encargado de recibir las peticiones de acceso como usuario
 	 * 
-	 * @param modelAttrUser
-	 * @param model
-	 * @return
+	 * Este método es invocado desde la JSP de acceso de usuarios
+	 * 
+	 * Método HTTP: POST
+	 * 
+	 * URI de llamada: /user/login
+	 *
+	 * @param loginData Datos de acceso del usuario
+	 * @param hasErrors Resultado de validación de datos
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP tras la operación
 	 */
 	@PostMapping(Constants.URI_USER_LOGIN)
-	public String processUserLogin(@ModelAttribute(name=Constants.MODEL_ATTR_USER) ModelAttrLoginData loginData, Model model)
+	public String processUserLogin(@Valid @ModelAttribute(name=Constants.MODEL_ATTR_USER) ModelAttrLoginData loginData,
+			BindingResult hasErrors, Model model)
 	{
-		// TODO ¿Se puede unificar este método con el 'processLanguageChange'?
-		
-		// TODO ¿Podría usar un BindingResult para el tipo 'ModelAttrLoginUser' dado que este tipo no es persistente?
-		
+		if (hasErrors.hasErrors())
+		{
+			List<FieldError> errors = hasErrors.getFieldErrors();
+			
+			// TODO Internacionalizar
+			String errorStr = "Campos erróneos: ";
+			for (FieldError fe : errors)
+			{
+				errorStr = errorStr + " -" + fe.getField();
+			}
+			
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, errorStr);
+			return Constants.JSP_USER_LOGIN;
+		}
+
 		try
 		{
-			OperationResult result = srvcUsuario.login(loginData.getUsr(), loginData.getPwd());
+			OperationResult result = srvcUsuario.login(loginData.getNombre(), loginData.getClave());
 			
 			if (result.getOperationResult())
 			{
@@ -91,11 +129,18 @@ public class ControllerInicio
 	}
 	
 	/**
+	 * Método encargado de recibir las peticiones de desconexión del usuario
 	 * 
-	 * @param userId
-	 * @param model
-	 * @param sessionStatus
-	 * @return
+	 * Este método es invocado desde la JSP de listado de documentos de usuario
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /user/logout
+	 *
+	 * @param userId Identificador del usuario actualmente conectado en la sesión
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @param sessionStatus Modelo de la sesión HTTP proporcionado por Spring
+	 * @return Nombre de la JSP de acceso
 	 */
 	@GetMapping(Constants.URI_USER_LOGOUT)
 	public String processUserLogout(@ModelAttribute(name=Constants.SESSION_ATTR_USERID) Integer userId, Model model, SessionStatus sessionStatus)
@@ -110,8 +155,20 @@ public class ControllerInicio
 		return "forward:" + Constants.URI_USER_LOGIN;
 	}
 	
-    @GetMapping(Constants.URI_ADMIN_LOGIN)
-    public String processAdminLogin(Model model)
+	/**
+	 * Método encargado de recibir las peticiones de acceso como administrador
+	 * 
+	 * Este método es invocado desde la JSP de acceso como usuario (enlace para cambiar a modo administrador).
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/login
+	 *
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP de login de administrador
+	 */
+	@GetMapping(Constants.URI_ADMIN_LOGIN)
+	public String processAdminLogin(Model model)
     {
     	try
     	{
@@ -128,18 +185,41 @@ public class ControllerInicio
     }
 
 	/**
+	 * Método encargado de recibir las peticiones de acceso como administrador
 	 * 
-	 * @param adminName
-	 * @param adminPwd
-	 * @param model
-	 * @return
+	 * Este método es invocado desde la JSP de acceso de administrador
+	 * 
+	 * Método HTTP: POST
+	 * 
+	 * URI de llamada: /admin/login
+	 * 
+	 * @param loginData Datos de acceso del administrador
+	 * @param hasErrors Resultado de validación de datos
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @return Nombre de la JSP tras la operación
 	 */
 	@PostMapping(Constants.URI_ADMIN_LOGIN)
-	public String processAdminLogin(@ModelAttribute(name=Constants.MODEL_ATTR_ADMIN) ModelAttrLoginData loginData, Model model)
+	public String processAdminLogin(@Valid @ModelAttribute(name=Constants.MODEL_ATTR_ADMIN) ModelAttrLoginData loginData,
+			BindingResult hasErrors, Model model)
 	{
+		if (hasErrors.hasErrors())
+		{
+			List<FieldError> errors = hasErrors.getFieldErrors();
+			
+			// TODO Internacionalizar
+			String errorStr = "Campos erróneos: ";
+			for (FieldError fe : errors)
+			{
+				errorStr = errorStr + " -" + fe.getField();
+			}
+			
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, errorStr);
+			return Constants.JSP_ADMIN_LOGIN;
+		}
+
 		try
 		{
-			OperationResult result = srvcAdmin.autenticar(loginData.getUsr(), loginData.getPwd());
+			OperationResult result = srvcAdmin.autenticar(loginData.getNombre(), loginData.getClave());
 			
 			if (result.getOperationResult())
 			{
@@ -166,12 +246,35 @@ public class ControllerInicio
 		}
 	}
 	
+	/**
+	 * Método invocado para mostrar el menú principal de administración
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/mainmenu
+	 * 
+	 * @return Nombre de la JSP de menú de administración
+	 */
 	@GetMapping(Constants.URI_ADMIN_MAINMENU)
 	public String processAdminMainMenu()
 	{
 		return Constants.JSP_ADMIN_MAINMENU;
 	}
 	
+	/**
+	 * Método encargado de recibir las peticiones de desconexión del administrador
+	 * 
+	 * Este método es invocado desde la JSP de menú principal
+	 * 
+	 * Método HTTP: GET
+	 * 
+	 * URI de llamada: /admin/logout
+	 * 
+	 * @param adminId Identificador del administrador actualmente conectado en la sesión
+	 * @param model Modelo de datos Req/Res de Spring
+	 * @param sessionStatus Modelo de la sesión HTTP proporcionado por Spring
+	 * @return Nombre de la JSP de acceso como administrador
+	 */
 	@GetMapping(Constants.URI_ADMIN_LOGOUT)
 	public String processAdminLogout(@ModelAttribute(name=Constants.SESSION_ATTR_ADMINID) Integer adminId, Model model, SessionStatus sessionStatus)
 	{

@@ -50,8 +50,6 @@ public interface Constants
 
 	// DIRECCIONES URI DE VINCULACIÓN DE CONTROLADORES
 	
-	// TODO Poner todas las URI como constantes
-	
 	String URI_BASE_USER = "/user";
 	
 	String URI_OPERATION_LOGIN = "/login";
@@ -64,19 +62,30 @@ public interface Constants
 	String URI_USER_LOGOUT = URI_BASE_USER + URI_OPERATION_LOGOUT;
 
 	String URI_BASE_ADMIN = "/admin";
+	
 	String URI_OVER_USER = "/user";
 	String URI_OVER_GROUP = "/group";
 	String URI_OVER_DOC = "/doc";
+	String URI_OVER_AJAX = "/ajax";
 
 	String URI_OPERATION_NEW = "/new";
 	String URI_OPERATION_EDIT = "/edit";
 	String URI_OPERATION_SAVE = "/save";
 	String URI_OPERATION_LIST = "/list";
 	String URI_OPERATION_DELETE = "/delete";
-
+	
+	String URI_OPERATION_CHECKWEBUSER = "/checkWebUser";
+	String URI_OPERATION_CHECKCLIENTID = "/checkClientId";
+	
 	String URI_ADMIN_LOGIN = URI_BASE_ADMIN + URI_OPERATION_LOGIN;
 	String URI_ADMIN_MAINMENU = URI_BASE_ADMIN + "/mainmenu";
 	String URI_ADMIN_LOGOUT = URI_BASE_ADMIN + URI_OPERATION_LOGOUT;
+	
+	// VALORES DE LOS RESULTADOS DEVUELTOS POR LAS LLAMADAS A AJAX
+
+	String AJAX_RESULT_AVAILABLE = "libre";
+	String AJAX_RESULT_UNAVAILABLE = "ocupado";
+	String AJAX_RESULT_ERROR = "Error";
 	
 	// NOMBRES DE LAS PÁGINAS JSP (EN SPRING NO SE USA LA EXTENSIÓN .jsp PORQUE EL BEAN InternalResourceViewResolver GESTIONA PREFIJOS Y SUFIJOS)
 	
@@ -92,7 +101,6 @@ public interface Constants
 	String JSP_ADMIN_LISTDOCS = "JspAdminListDocs";
 	String JSP_ADMIN_EDITGROUP = "JspAdminEditGroup";
 	
-	// TODO Esta JSP está casi vacía, hay que añadir la parte de subida de archivos
 	String JSP_ADMIN_EDITDOC = "JspAdminEditDocument";
 
 	String JSP_ADMIN_EDITUSER = "JspAdminEditUser";

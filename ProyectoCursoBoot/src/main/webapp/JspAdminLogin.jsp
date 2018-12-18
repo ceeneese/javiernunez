@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ page errorPage="JspAdminError.jsp"%>
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -9,7 +9,7 @@
 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="jsp.admin.login.title"/></title>
 	</head>
 
@@ -25,11 +25,13 @@
 			<table>
 				<tr>
 					<td><spring:message code="jsp.admin.login.nombre"/></td>
-					<td><form:input path="usr"/></td>
+					<td><form:input path="nombre"/></td>
+					<td><form:errors path="nombre"/></td>
 				</tr>
 				<tr>
 					<td><spring:message code="jsp.admin.login.pwd"/></td>
-					<td><form:password path="pwd"/></td>
+					<td><form:password path="clave"/></td>
+					<td><form:errors path="clave"/></td>
 				</tr>
 			</table>
 			<br>

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page errorPage="JspAdminError.jsp"%>
 
@@ -11,14 +11,16 @@
 <!DOCTYPE html>
 
 <html>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="jsp.admin.edituser.title"/></title>
 	</head>
 	
-	<%-- A esta JSP le llegan los siguientes parámetros:
-		MODEL_ATTR_USER (modelAttrUser) - El usuario a editar (vacío en caso de nuevo usuario)
-		MODEL_ATTR_CHECKEDGROUPIDS (ModelAttrCheckedGroupsIds) - Lista de ids de los grupos a los que el usuario está suscrito
+	<%-- A esta JSP le llegan los siguientes parÃ¡metros:
+		MODEL_ATTR_USER (modelAttrUser) - El usuario a editar (vacÃ­o en caso de nuevo usuario)
+		MODEL_ATTR_CHECKEDGROUPIDS (ModelAttrCheckedGroupsIds) - Lista de ids de los grupos a los que el usuario estÃ¡ suscrito
 		MODEL_ATTR_GROUPSLIST (ModelAttrGroupsList) - Lista de todos los grupos de documentos disponibles en el sistema
 	 --%>
 
@@ -36,6 +38,87 @@
 		checkbox.checked = true;
 	}
 	
+	function changeElementsStatus(labelStr, disable)
+	{
+		var label = document.getElementById(labelStr);
+		label.style.color = (disable ? "red" : "black");
+		document.getElementById('botonSubmit').disabled = disable;
+	}
+
+	function comprobarWebUser()
+	{
+		var v = document.getElementById('usrAccesoWeb').value.length;
+		
+		if (v == 0)
+		{
+			changeElementsStatus('labelWebUser', false);
+		}
+		else
+		{
+			$.ajax(
+			{
+				url: "/admin/ajax/checkWebUser?webUsername=" + document.getElementById('usrAccesoWeb').value,
+				method: "GET",
+				contentType: "application/json",
+				timeout: 20000,
+				success: function(result)
+				{
+					if (result == 'ocupado')
+					{
+						changeElementsStatus('labelWebUser', true);
+						alert('Nombre de usuario web ya utilizado');
+					}
+					else // if (result == 'libre')
+					{
+						changeElementsStatus('labelWebUser', false);
+					}
+				},
+				error: function(result)
+				{
+					alert('Error');
+					changeElementsStatus('labelWebUser', false);
+				}
+			});
+		}
+	}
+
+	function comprobarIdCliente()
+	{
+		var v = document.getElementById('idCliente').value.length;
+		
+		if (v == 0)
+		{
+			changeElementsStatus('labelClientId', false);
+		}
+		else
+		{
+			$.ajax(
+			{
+				url: "/admin/ajax/checkClientId/" + document.getElementById('idCliente').value,
+				method: "GET",
+				contentType: "application/json",
+				timeout: 20000,
+				success: function(result)
+				{
+					if (result == 'ocupado')
+					{
+						changeElementsStatus('labelClientId', true);
+						alert('NÃºmero de cliente ya utilizado');
+					}
+					else // if (result == 'libre')
+					{
+						changeElementsStatus('labelClientId', false);
+					}
+				},
+				error: function(result)
+				{
+					alert('Error');
+					changeElementsStatus('labelClientId', false);
+				}
+			});
+		}
+	}
+
 	</script>
 	
 	<body onload="updateCheckersStatus()">
@@ -43,7 +126,7 @@
 		<br><h1>
 		<c:choose>
 			<c:when test = "${modelAttrUser.idUsuario != null}">
-				<%-- Estamos en modo de edición de usuario ya existente --%>
+				<%-- Estamos en modo de ediciÃ³n de usuario ya existente --%>
 				<spring:message code="jsp.admin.edituser.body.edit"/> '${modelAttrUser.nombre} ${modelAttrUser.apellidos}'
 				<c:set var="backhref" value="/admin/user/list"/>
 				<spring:message code="jsp.admin.edituser.back.list" var="msgcode"/>
@@ -61,14 +144,14 @@
 		<%-- Mensaje a mostrar (en caso de que exista alguno) --%>
 		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
 
-		<form:form modelAttribute="ModelAttrUser" method="POST" action="/admin/user/save" accept-charset="ISO-8859-1">
+		<form:form modelAttribute="ModelAttrUser" method="POST" action="/admin/user/save" accept-charset="UTF-8">
 			
 			<form:hidden path="idUsuario"/>
 			
 			<table>
 				<tr>
-					<td><spring:message code="jsp.admin.edituser.clientid"/></td>
-					<td><form:input path="idCliente" type="number" readonly="${modelAttrUser.idCliente != null}"/></td>
+					<td><label id="labelClientId"><spring:message code="jsp.admin.edituser.clientid"/></label></td>
+					<td><form:input path="idCliente" type="number" onblur="comprobarIdCliente()" readonly="${modelAttrUser.idCliente != null}"/></td>
 					<td><form:errors path="idCliente" cssClass="error" /></td>
 				</tr>
 				
@@ -127,8 +210,8 @@
 				</tr>
 
 				<tr>
-					<td><spring:message code="jsp.admin.edituser.webusr"/></td>
-					<td><form:input path="usrAccesoWeb"/></td>
+					<td><label id="labelWebUser"><spring:message code="jsp.admin.edituser.webusr"/></label></td>
+					<td><form:input path="usrAccesoWeb" onblur="comprobarWebUser()"/></td>
 					<td><form:errors path="usrAccesoWeb" cssClass="error" /></td>
 				</tr>
 
@@ -150,7 +233,7 @@
 				</c:forEach> 
 
 				<tr>
-					<td><input type="submit" value="<spring:message code="jsp.admin.edituser.submit"/>"/></td>
+					<td><input id="botonSubmit" type="submit" value="<spring:message code="jsp.admin.edituser.submit"/>"/></td>
 				</tr>
 			</table>
 		</form:form>

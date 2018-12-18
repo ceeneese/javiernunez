@@ -1,6 +1,9 @@
 package com.cenec.imfe.proyecto.services;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ import com.cenec.imfe.proyecto.model.DocumentInfo;
 @Transactional
 public class ServiceDocumentoImplTransactional implements ServiceDocumento
 {
+	private final static int BUFFER_SIZE = 1024;
+
 	@Autowired
 	private DaoDocumento dao;
 
@@ -23,7 +28,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 	{
 		if (doc == null)
 		{
-			// Internacionalizar
+			// TODO Internacionalizar
 			throw new ServiceException("Error al guardar el documento: documento vacío");
 		}
 		
@@ -48,11 +53,51 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		{
 			FileAccessorImplSpring springAccessor = (FileAccessorImplSpring)accessor;
 			
-			
-			srvcDocs.saveDocument(doc, file, filePath);
+			BufferedInputStream bis = null;
+			BufferedOutputStream bos = null;
+        	File file = new File(springAccessor.getPath());
+	        
+        	try
+        	{
+	        	bis = new BufferedInputStream(springAccessor.getMpFile().getInputStream());
+	            bos = new BufferedOutputStream(new FileOutputStream(file));
 
-			doc.setLocation(springAccessor.getPath());
-			dao.saveDocument(doc);
+	            int read = 0;
+	            byte[] bytes = new byte[BUFFER_SIZE];
+	            while ((read = bis.read(bytes)) != -1)
+	            {
+	                bos.write(bytes, 0, read);
+	            }
+
+        		bos.flush();
+        	}
+	        finally
+	        {        		
+	        	if (bis != null)
+	        	{
+	        		try { bis.close(); } catch (Exception e) {}
+	        	}
+	        	
+	        	if (bos != null)
+	        	{
+	        		try { bos.close(); } catch (Exception e) {}
+	       		}
+	        }
+	        	
+        	// Llegados a este punto no ha habido problemas con el acceso a ficheros
+			
+			try
+			{
+				doc.setLocation(springAccessor.getPath());
+				dao.saveDocument(doc);
+			}
+			catch (Exception e)
+			{
+				// Si el DAO no puede guardar los datos del documento, se borra el archivo
+				file.delete();
+				
+				throw e;
+			}
 		}
 		catch (Exception e)
 		{

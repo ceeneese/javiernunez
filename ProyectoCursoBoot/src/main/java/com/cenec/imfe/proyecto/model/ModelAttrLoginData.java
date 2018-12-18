@@ -1,5 +1,7 @@
 package com.cenec.imfe.proyecto.model;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * Clase utilizada en el modelo de Spring para pasar usuario y contraseña de acceso
  * @author Javier
@@ -7,33 +9,35 @@ package com.cenec.imfe.proyecto.model;
  */
 public class ModelAttrLoginData
 {
-	private String usr;
-	private String pwd;
+	@NotEmpty
+	private String nombre;
+	
+	@NotEmpty
+	private String clave;
 	
 	public ModelAttrLoginData()
 	{
 		super();
 	}
 
-	public String getUsr() {
-		return usr;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setUsr(String usr) {
-		this.usr = usr;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
-	public String getPwd() {
-		return pwd;
+	public String getClave() {
+		return clave;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
+	public void setClave(String clave) {
+		this.clave = clave;
 	}
-	
+
 	public String toString()
 	{
-		return usr + "/" + pwd;
+		return nombre + "/" + clave;
 	}
-
 }

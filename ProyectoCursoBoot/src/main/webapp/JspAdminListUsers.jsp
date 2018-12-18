@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page errorPage="JspAdminError.jsp"%>
 
@@ -9,7 +9,7 @@
 
 <html>
 	<head>
-		<meta charset="ISO-8859-1">
+		<meta charset="UTF-8">
 		<title><spring:message code="jsp.admin.listusers.title"/></title>
 	</head>
 	
@@ -58,8 +58,10 @@
      				<td>${user.tfnoFijo}</td>
      				<td>${user.tfnoMovil}</td>
      				<td>${user.correo_e}</td>
-					<td><a href="/admin/user/edit?idUser=${user.idUsuario}"><img src="images/modificar.png"/></a></td>
-					<td><a href="/admin/user/delete?idUser=${user.idUsuario}"><img src="images/borrar.png"/></a></td>
+					<td><a href="/admin/user/edit?idUser=${user.idUsuario}"><img src="/images/Modificar.png" height="20"/></a></td>
+					<td><a href="/admin/user/delete?idUser=${user.idUsuario}" onclick="return confirm('<spring:message code="jsp.admin.listgroups.confirm" />')">
+						<img src="/images/Borrar.png" height="20"/>
+						</a></td>
 				</tr>
 				</c:forEach>
 			</tbody>

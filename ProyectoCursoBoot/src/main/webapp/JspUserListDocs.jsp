@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page errorPage="JspUserError.jsp"%>
 
@@ -9,7 +9,7 @@
 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="jsp.user.docslist.title"/></title>
 	</head>
 
@@ -33,8 +33,8 @@
 				<c:forEach items="${ModelAttrDocsList}" var="doc">
 				<tr>
 					<td>${doc.name}</td>
-					<!--  td><a href="/user/download?docId=${doc.idDoc}"> <img src="images/descarga.png" height="20" alt="<spring:message code="jsp.user.docslist.download"/>"/></a> </td -->
-					<td><a href="/user/download?docId=${doc.idDoc}"> <spring:message code="jsp.user.docslist.download"/></a> </td>
+					<spring:message code="jsp.user.docslist.download" var="alternate"/>
+					<td><a href="/user/download?docId=${doc.idDoc}" target="_blank"><img src="/images/Descarga.png" height="20" alt="${alternate}"/></a></td>
 				</tr>
 				</c:forEach>
 			</tbody>			

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page errorPage="JspAdminError.jsp"%>
 
@@ -10,7 +10,7 @@
 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="jsp.admin.editdoc.title"/></title>
 	</head>
 	
@@ -19,7 +19,7 @@
 		<br><h1>
 		<c:choose>
 			<c:when test = "${ModelAttrDocument.idDoc != null}">
-				<%-- Estamos en modo de edición de documento ya existente --%>
+				<%-- Estamos en modo de ediciÃ³n de documento ya existente --%>
 				<spring:message code="jsp.admin.editdoc.body.edit"/> ${ModelAttrDocument.name}
 				<c:set var="backhref" value="/admin/doc/list"/>
 				<spring:message code="jsp.admin.editdoc.back.list" var="msgcode"/>
@@ -54,8 +54,8 @@
 					<td><form:errors path="location" cssClass="error"/></td>
 				</tr>
 -->
-				<%-- Sólo se permite subir un archivo cuando se trata de nuevo documento.
-				     Para modificaciones sólo se permite cambiar el nombre --%>
+				<%-- SÃ³lo se permite subir un archivo cuando se trata de nuevo documento.
+				     Para modificaciones sÃ³lo se permite cambiar el nombre --%>
 				<c:if test="${ModelAttrDocument.idDoc == null}">
 				<tr>
 					<td><spring:message code="jsp.admin.editdoc.file"/></td>

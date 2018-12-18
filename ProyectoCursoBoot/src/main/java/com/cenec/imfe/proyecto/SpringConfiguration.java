@@ -36,9 +36,6 @@ public class SpringConfiguration implements WebMvcConfigurer
 	@Bean
 	public LocaleChangeInterceptor localeChangeInterceptor()
 	{
-		// TODO En todas las páginas que se ponga el enlace de cambio de idioma, poner como URI la propia página para que se sepa 
-		// desde dónde se pulsó el cambio de idioma y se vuelva al mismo punto desde donde se hizo la llamada de cambio de idiona
-
 		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
 	    interceptor.setParamName("lang");
 	    return interceptor;
@@ -65,7 +62,7 @@ public class SpringConfiguration implements WebMvcConfigurer
 	    InterceptorRegistration reg = registry.addInterceptor(loginInterceptor());
 	    
 	    reg.excludePathPatterns("/css/*");
-	    reg.excludePathPatterns("*/images/*");
+	    reg.excludePathPatterns("/images/*");
 	    reg.excludePathPatterns("/js/*");
 	}
 	

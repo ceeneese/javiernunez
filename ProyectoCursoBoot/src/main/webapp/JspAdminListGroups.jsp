@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page errorPage="JspAdminError.jsp"%>
 
@@ -9,7 +9,7 @@
 
 <html>
 	<head>
-		<meta charset="ISO-8859-1">
+		<meta charset="UTF-8">
 		<title><spring:message code="jsp.admin.listgroups.title"/></title>
 	</head>
 	
@@ -36,8 +36,10 @@
 				<c:forEach items="${ModelAttrGroupsList}" var="group">
 				<tr>
       				<td>${group.nombre}</td>
-					<td><a href="/admin/group/edit?groupId=${group.id}"><img src="/resources/images/Modificar.png"/></a></td>
-					<td><a href="/admin/group/delete?groupId=${group.id}"><img src="/src/main/resources/images/Borrar.png"/></a></td>
+					<td><a href="/admin/group/edit?groupId=${group.id}"><img src="/images/Modificar.png" height="20"/></a></td>
+					<td><a href="/admin/group/delete?groupId=${group.id}" onclick="return confirm('<spring:message code="jsp.admin.listgroups.confirm" />')">
+						<img src="/images/Borrar.png" height="20"/>
+						</a></td>
 				</tr>
 				</c:forEach>
 			</tbody>

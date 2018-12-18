@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "documento")
@@ -17,6 +18,7 @@ public class DocumentInfo
 	@Column(name = "idDocumento", unique = true, nullable = false)	
 	private Integer idDoc;
 	
+	@NotEmpty
 	@Column(name = "nombre", unique = true, nullable = false)
 	private String name;
 	
@@ -93,6 +95,6 @@ public class DocumentInfo
 	@Override
 	public String toString()
 	{
-		return this.idDoc + this.name;
+		return this.idDoc + '-' + this.name;
 	}
 }

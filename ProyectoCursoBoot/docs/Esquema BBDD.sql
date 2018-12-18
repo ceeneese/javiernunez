@@ -14,8 +14,8 @@ CREATE TABLE `gestiondocumentos`.`usuario` (
   `tfnoFijo` VARCHAR(9) NULL,
   `tfnoMovil` VARCHAR(12) NULL,
   `correo` VARCHAR(45) NULL,
-  `usrAcceso` VARCHAR(12) NULL,
-  `pwdAcceso` VARCHAR(15) NULL,
+  `usrAcceso` VARCHAR(12) NOT NULL,
+  `pwdAcceso` VARCHAR(15) NOT NULL,
   UNIQUE INDEX `idCliente_UNIQUE` (`idCliente` ASC) VISIBLE,
   PRIMARY KEY (`idUsuario`),
   UNIQUE INDEX `usrAcceso_UNIQUE` (`usrAcceso` ASC) VISIBLE);

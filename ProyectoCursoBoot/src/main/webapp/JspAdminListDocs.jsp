@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page errorPage="JspAdminError.jsp"%>
 
@@ -9,7 +9,7 @@
 
 <html>
 	<head>
-		<meta charset="ISO-8859-1">
+		<meta charset="UTF-8">
 		<title><spring:message code="jsp.admin.listdocs.title"/></title>
 	</head>
 	
@@ -25,7 +25,6 @@
 			<thead>
 				<tr>
 					<th><spring:message code="jsp.admin.listdocs.tableheader.docname"/></th>
-					<th><spring:message code="jsp.admin.listdocs.tableheader.location"/></th>
 					<th><spring:message code="jsp.admin.listdocs.tableheader.modify"/></th>
 					<th><spring:message code="jsp.admin.listdocs.tableheader.delete"/></th>
 				</tr>
@@ -36,9 +35,12 @@
 				<c:forEach items="${ModelAttrDocsList}" var="doc">
 				<tr>
       				<td>${doc.name}</td>
-     				<td>${doc.location}</td>
-					<td><a href="/admin/doc/edit?docId=${doc.idDoc}"><img src="images/modificar.png"/></a></td>
-					<td><a href="/admin/doc/delete?docId=${doc.idDoc}"><img src="images/borrar.png"/></a></td>
+					<td><a href="/admin/doc/edit?docId=${doc.idDoc}">
+							<img src="/images/Modificar.png" height="20"/>
+						</a></td>
+					<td><a href="/admin/doc/delete?docId=${doc.idDoc}" onclick="return confirm('<spring:message code="jsp.admin.listdocs.confirm" />')">
+						<img src="/images/Borrar.png" height="20"/>
+						</a></td>
 				</tr>
 				</c:forEach>
 			</tbody>
