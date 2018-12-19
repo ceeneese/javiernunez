@@ -9,7 +9,7 @@ import org.springframework.context.MessageSource;
 public class LanguageUtilsImpl implements LanguageUtils
 {
 	private static final String DEFAULT_LANGUAGE = "es";
-	
+	private static final String BUNDLE_BASENAME = "com.cenec.imfe.proyecto.utils.messagesBundle";
 	private static LanguageUtilsImpl instance;
 	
 	private MessageSource springMessageSource;
@@ -23,6 +23,7 @@ public class LanguageUtilsImpl implements LanguageUtils
 	{
 		super();
 		
+		changeDefaultLocale(DEFAULT_LANGUAGE);
 	}
 	
 	public void setSpringMessageSource(MessageSource messageSource)
@@ -52,7 +53,7 @@ public class LanguageUtilsImpl implements LanguageUtils
 		{
 			Locale currentLocale = new Locale(language);
 			
-	        defaultMessageSource = ResourceBundle.getBundle("messages", currentLocale);   
+	        defaultMessageSource = ResourceBundle.getBundle(BUNDLE_BASENAME, currentLocale);   
 		}
 	}
 
