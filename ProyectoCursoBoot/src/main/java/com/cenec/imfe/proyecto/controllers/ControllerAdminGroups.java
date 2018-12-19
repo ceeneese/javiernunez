@@ -2,6 +2,7 @@ package com.cenec.imfe.proyecto.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import com.cenec.imfe.proyecto.model.DocumentInfo;
 import com.cenec.imfe.proyecto.model.GrupoDocumentos;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 import com.cenec.imfe.proyecto.services.ServiceGrupoDocs;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 /**
  * Controlador encargado de atender las peticiones relacionadas con grupos de documentos
@@ -38,7 +40,10 @@ public class ControllerAdminGroups
 	@Autowired
 	private ServiceDocumento srvcDocs;
 	
-	/**
+ 	@Autowired  
+    private LanguageUtils messageSource;
+
+ 	/**
 	 * Método encargado de recibir las peticiones de creación de un nuevo grupo de documentos
 	 * 
 	 * Este método es invocado desde la JSP de menú principal.
@@ -138,17 +143,17 @@ public class ControllerAdminGroups
 	 * @param checkedDocs Lista de los identificadores de documentos incluidos en el grupo
 	 * @param req Petición HTTP para el acceso a datos no incluidos en el modelo Spring
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP a invocar tras la operación
 	 */
 	@PostMapping(Constants.URI_OPERATION_SAVE)
 	public String processSaveGroup(@Valid @ModelAttribute GrupoDocumentos grp, BindingResult result,
-		@RequestParam(required=false) String checkedDocs, HttpServletRequest req, Model model)
+		@RequestParam(required=false) String checkedDocs, HttpServletRequest req, Model model, Locale locale)
 	{
 		// Comprobamos el BindingResult
 		if (result.hasErrors())
 		{
-			// TODO Internacionalizar
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "Error en los datos del grupo de documentos");
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.admin.groups.save.errorfields", null, locale));
 			
 			if (grp.getId() == null)
 			{
@@ -185,7 +190,8 @@ public class ControllerAdminGroups
 			
 			srvcGroupDocs.saveGroup(grp);
 
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El grupo '" + grp.getNombre() + "' ha sido guardado");
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.admin.groups.save.ok", new Object[] {grp.getNombre()}, locale));
+			
 			return processListGroups(model);
 		}
 		catch (Exception e)
@@ -236,17 +242,19 @@ public class ControllerAdminGroups
 	 * 
 	 * @param groupId Identificador del grupo de documentos a borrar
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP a invocar tras la operación
 	 */
 	@GetMapping(Constants.URI_OPERATION_DELETE)
-	public String processDeleteGroup(@RequestParam Integer groupId, Model model)
+	public String processDeleteGroup(@RequestParam Integer groupId, Model model, Locale locale)
 	{
 		try
 		{
 			boolean deleted = srvcGroupDocs.deleteGroup(groupId);
 
-			// TODO Internacionalizar
-			String msg = (deleted ? "El grupo ha sido borrado" : "El grupo no pudo ser borrado");
+			String msg = (deleted
+				? messageSource.getMessage("controller.admin.groups.delete.ok", null, locale)
+				: messageSource.getMessage("controller.admin.groups.delete.no", null, locale));
 			
 			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, msg);
 			return Constants.JSP_ADMIN_MAINMENU;

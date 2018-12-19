@@ -2,6 +2,7 @@ package com.cenec.imfe.proyecto.controllers;
 
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
@@ -21,6 +22,7 @@ import com.cenec.imfe.proyecto.model.ModelAttrLoginData;
 import com.cenec.imfe.proyecto.services.OperationResult;
 import com.cenec.imfe.proyecto.services.ServiceAdministrador;
 import com.cenec.imfe.proyecto.services.ServiceUsuario;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 /**
  * Controlador para acceso al sistema (login) y cambio de idioma (redirección a página de inicio)
@@ -35,7 +37,10 @@ public class ControllerInicio
 	@Autowired
 	private ServiceAdministrador srvcAdmin;
 	
-	/**
+ 	@Autowired  
+    private LanguageUtils messageSource;
+
+ 	/**
 	 * Método encargado de recibir las peticiones de acceso como usuario
 	 * 
 	 * Este método es invocado desde el inicio de la aplicación web.
@@ -76,18 +81,18 @@ public class ControllerInicio
 	 * @param loginData Datos de acceso del usuario
 	 * @param hasErrors Resultado de validación de datos
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP tras la operación
 	 */
 	@PostMapping(Constants.URI_USER_LOGIN)
 	public String processUserLogin(@Valid @ModelAttribute(name=Constants.MODEL_ATTR_USER) ModelAttrLoginData loginData,
-			BindingResult hasErrors, Model model)
+			BindingResult hasErrors, Model model, Locale locale)
 	{
 		if (hasErrors.hasErrors())
 		{
 			List<FieldError> errors = hasErrors.getFieldErrors();
 			
-			// TODO Internacionalizar
-			String errorStr = "Campos erróneos: ";
+			String errorStr = messageSource.getMessage("controller.init.userlogin.errorfields", null, locale);
 			for (FieldError fe : errors)
 			{
 				errorStr = errorStr + " -" + fe.getField();
@@ -196,18 +201,18 @@ public class ControllerInicio
 	 * @param loginData Datos de acceso del administrador
 	 * @param hasErrors Resultado de validación de datos
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP tras la operación
 	 */
 	@PostMapping(Constants.URI_ADMIN_LOGIN)
 	public String processAdminLogin(@Valid @ModelAttribute(name=Constants.MODEL_ATTR_ADMIN) ModelAttrLoginData loginData,
-			BindingResult hasErrors, Model model)
+			BindingResult hasErrors, Model model, Locale locale)
 	{
 		if (hasErrors.hasErrors())
 		{
 			List<FieldError> errors = hasErrors.getFieldErrors();
 			
-			// TODO Internacionalizar
-			String errorStr = "Campos erróneos: ";
+			String errorStr = messageSource.getMessage("controller.init.adminlogin.errorfields", null, locale);
 			for (FieldError fe : errors)
 			{
 				errorStr = errorStr + " -" + fe.getField();

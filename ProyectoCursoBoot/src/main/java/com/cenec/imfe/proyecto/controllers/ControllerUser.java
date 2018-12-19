@@ -1,6 +1,7 @@
 package com.cenec.imfe.proyecto.controllers;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +17,7 @@ import com.cenec.imfe.proyecto.model.DocumentInfo;
 import com.cenec.imfe.proyecto.services.OperationResult;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 import com.cenec.imfe.proyecto.services.ServiceUsuario;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 /**
  * Controlador encargado de atender las peticiones de usuarios
@@ -32,7 +34,10 @@ public class ControllerUser
 	@Autowired
 	private ServiceDocumento srvcDocs;
 
-	/**
+ 	@Autowired  
+    private LanguageUtils messageSource;
+
+ 	/**
 	 * Constructor
 	 */
 	public ControllerUser()
@@ -51,10 +56,11 @@ public class ControllerUser
 	 *
 	 * @param request Petición HTTP
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return
 	 */
 	@GetMapping(Constants.URI_OPERATION_DOCLIST)
-	public String processList(HttpServletRequest request, Model model)
+	public String processList(HttpServletRequest request, Model model, Locale locale)
 	{
 		try
 		{
@@ -63,10 +69,10 @@ public class ControllerUser
 			Integer userId = (Integer)request.getSession().getAttribute(Constants.SESSION_ATTR_USERID);
 			
 			// Controlar acceso directo a 'doclist' sin usuario en la sesión
+			// (NOTA: esto ya lo hace el interceptor; esto sería otra forma de hacerlo)
 			if (userId == null)
 			{
-				// TODO Internacionalizar
-				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "Es necesario iniciar sesión");
+				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.user.list.sessionrequired", null, locale));
 				return Constants.JSP_USER_LOGIN;
 			}
 			
@@ -95,26 +101,26 @@ public class ControllerUser
 	 * @param docId El identificador del documento a descargar
 	 * @param request Petición HTTP
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Página JSP de listado de documentos
 	 */
 	@GetMapping(Constants.URI_OPERATION_DOWNLOAD)
-	public String processDownload(@RequestParam Integer docId, HttpServletRequest request, Model model)
+	public String processDownload(@RequestParam Integer docId, HttpServletRequest request, Model model, Locale locale)
 	{
 		// El userId es obtenido de la sesión
 		Integer userId = (Integer)request.getSession().getAttribute(Constants.SESSION_ATTR_USERID);
 		
 		// Controlar acceso directo a 'download' sin usuario en la sesión
+		// (NOTA: esto ya lo hace el interceptor; esto sería otra forma de hacerlo)
 		if (userId == null)
 		{
-			// TODO Internacionalizar
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "Es necesario iniciar sesión");
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.user.download.sessionrequired", null, locale));
 			return Constants.JSP_USER_LOGIN;
 		}
 		
 		if (docId == null)
 		{
-			// TODO Internacionalizar
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento no existe");
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.user.download.docnotexists", null, locale));
 			return Constants.JSP_USER_LISTDOCS;
 		}
 		
@@ -124,15 +130,14 @@ public class ControllerUser
 			
 			if (result.getOperationResult())
 			{
-				// TODO Internacionalizar
-				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento ha sido descargado");
+				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.user.download.ok", null, locale));
 			}
 			else
 			{
 				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, result.getError());
 			}
 			
-			return processList(request, model);
+			return processList(request, model, locale);
 		}
 		catch (Exception e)
 		{

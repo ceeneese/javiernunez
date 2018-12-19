@@ -9,26 +9,26 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title><spring:message code="admin.menu.title"/></title>
+		<title><spring:message code="jsp.admin.mainmenu.title"/></title>
 	</head>
 	
 	<body>
-		<h1><spring:message code="admin.menu.options"/></h1>
+		<h1><spring:message code="jsp.admin.mainmenu.options"/></h1>
 		<br><br>
-		<a href="/admin/user/new"><spring:message code="admin.menu.newuser"/></a>
+		<a href="/admin/user/new"><spring:message code="jsp.admin.mainmenu.newuser"/></a>
 		<br>
-		<a href="/admin/user/list"><spring:message code="admin.menu.listusers"/></a>
+		<a href="/admin/user/list"><spring:message code="jsp.admin.mainmenu.listusers"/></a>
 		<br>
-		<a href="/admin/group/new"><spring:message code="admin.menu.newgroup"/></a>
+		<a href="/admin/group/new"><spring:message code="jsp.admin.mainmenu.newgroup"/></a>
 		<br>
-		<a href="/admin/group/list"><spring:message code="admin.menu.listgroups"/></a>
+		<a href="/admin/group/list"><spring:message code="jsp.admin.mainmenu.listgroups"/></a>
 		<br>
-		<a href="/admin/doc/new"><spring:message code="admin.menu.newdoc"/></a>
+		<a href="/admin/doc/new"><spring:message code="jsp.admin.mainmenu.newdoc"/></a>
 		<br>
-		<a href="/admin/doc/list"><spring:message code="admin.menu.listdocs"/></a>
+		<a href="/admin/doc/list"><spring:message code="jsp.admin.mainmenu.listdocs"/></a>
 
 		<br><br>
-		<a href="/admin/logout"><spring:message code="admin.menu.logout"/></a>
+		<a href="/admin/logout"><spring:message code="jsp.admin.mainmenu.logout"/></a>
 		
 		<br>
 		<br>

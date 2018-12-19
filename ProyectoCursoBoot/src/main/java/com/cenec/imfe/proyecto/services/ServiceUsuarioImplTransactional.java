@@ -18,6 +18,7 @@ import com.cenec.imfe.proyecto.dao.DaoUsuario;
 import com.cenec.imfe.proyecto.model.DocumentInfo;
 import com.cenec.imfe.proyecto.model.GrupoDocumentos;
 import com.cenec.imfe.proyecto.model.Usuario;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 import com.cenec.imfe.proyecto.utils.PasswordEncoder;
 
 @Service
@@ -27,21 +28,22 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 	@Autowired
 	private DaoUsuario dao;
 	
+	@Autowired
+	private LanguageUtils msgSource;
+
 	@Override
 	public OperationResult login(String webUsr, String webPwd) throws ServiceException
 	{
 		if (webUsr == null || webUsr.length() == 0)
 		{
 			// Valores no válidos
-			// TODO Internacionalizar
-			return new OperationResult(false, "Nombre de usuario no válido", null);
+			return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.user.login.invalidusr"), null);
 		}
 		
 		if  (webPwd == null || webPwd.length() == 0)
 		{
 			// Valores no válidos
-			// TODO Internacionalizar
-			return new OperationResult(false, "Clave de usuario no válida", null);
+			return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.user.login.invalidpwd"), null);
 		}
 		
 		try
@@ -51,8 +53,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 			
 			if (usr == null)
 			{
-				// TODO Internacionalizar
-				return new OperationResult(false, "El usuario " + webUsr + " no existe", null);
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.user.login.usernotexists", webUsr), null);
 			}
 			
 			// Comprobar clave de acceso
@@ -64,13 +65,12 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 			}
 			else
 			{
-				// TODO Internacionalizar
-				return new OperationResult(false, "Contraseña incorrecta", null);
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.user.login.wrongpwd"), null);
 			}
 		}
 		catch (Exception e)
 		{
-			throw new ServiceException("Error al autenticar el usuario " + webUsr, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.user.login.error", webUsr), e);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 			}
 			catch (Exception e)
 			{
-				throw new ServiceException("Error al guardar usuario", e);
+				throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.user.save.error"), e);
 			}
 		}
 	}
@@ -99,7 +99,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 		}
 		catch (Exception e)
 		{
-			throw new ServiceException("", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.user.getlist.error"), e);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 		}
 		catch (Exception e)
 		{
-			throw new ServiceException("Error al obtener los documentos del usuario", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.user.getdocs.error"), e);
 		}
 	}
 
@@ -142,7 +142,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 		}
 		catch (Exception e)
 		{
-			throw new ServiceException("Error al obtener usuario " + access, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.user.get.error", access.toString()), e);
 		}
 	}
 
@@ -155,7 +155,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 		}
 		catch (Exception e)
 		{
-			throw new ServiceException("Error al obtener usuarios de tipo " + type, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.user.getlistbytype.error", type.toString()), e);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class ServiceUsuarioImplTransactional implements ServiceUsuario
 		}
 		catch (Exception e)
 		{
-			throw new ServiceException("Error al borrar usuario " + access, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.user.delete.error", access.toString()), e);
 		}
 	}
 }

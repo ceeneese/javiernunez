@@ -13,6 +13,7 @@ import com.cenec.imfe.proyecto.dao.AccessBy.AccessType;
 import com.cenec.imfe.proyecto.dao.DaoException;
 import com.cenec.imfe.proyecto.dao.DaoUsuario;
 import com.cenec.imfe.proyecto.model.Usuario;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 @Repository
 public class DaoUsuarioImplHib implements DaoUsuario
@@ -27,6 +28,9 @@ public class DaoUsuarioImplHib implements DaoUsuario
 
 	@Autowired
 	private SessionFactory hibernateSessionFactory;
+
+	@Autowired
+	private LanguageUtils msgSource;
 
 	/**
 	 * Constructor
@@ -47,8 +51,7 @@ public class DaoUsuarioImplHib implements DaoUsuario
 			}
 			catch (Exception e)
 			{
-				// TODO Internacionalizar
-				throw new DaoException("Error al guardar usuario", e);
+				throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.user.save.error"), e);
 			}
 		}
 	}
@@ -62,8 +65,7 @@ public class DaoUsuarioImplHib implements DaoUsuario
 		}		
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new DaoException("No se puede obtener el usuario " + access, e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.user.get.error", access.toString()), e);
 		}
 	}
 	
@@ -168,8 +170,7 @@ public class DaoUsuarioImplHib implements DaoUsuario
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new DaoException("Error al obtener lista de usuarios", e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.user.getlist.error"), e);
 		}
 	}
 
@@ -191,8 +192,7 @@ public class DaoUsuarioImplHib implements DaoUsuario
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new DaoException("Error al borrar el usuario " + access, e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.user.delete.error", access.toString()), e);
 		}
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.cenec.imfe.proyecto.dao.DaoAdmin;
 import com.cenec.imfe.proyecto.model.Administrador;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 import com.cenec.imfe.proyecto.utils.PasswordEncoder;
 
 // Hay que declarar el servicio como transaccional aunque no haga acciones de escritura. En caso de no hacerlo, Hibernate da un error
@@ -17,6 +18,9 @@ public class ServiceAdministradorImpl implements ServiceAdministrador
 	@Autowired
 	private DaoAdmin dao;
 	
+	@Autowired
+	private LanguageUtils msgSource;
+
 	/**
 	 * Constructor
 	 */
@@ -31,13 +35,13 @@ public class ServiceAdministradorImpl implements ServiceAdministrador
 		if (adminName == null || adminName.length() == 0)
 		{
 			// Valores no válidos
-			return new OperationResult(false, "Nombre de administrador no válido", null);
+			return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.admin.login.invalidadmin"), null);
 		}
 		
 		if  (adminPassword == null || adminPassword.length() == 0)
 		{
 			// Valores no válidos
-			return new OperationResult(false, "Clave de administrador no válida", null);
+			return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.admin.login.invalidpwd"), null);
 		}
 		
 		try
@@ -46,7 +50,7 @@ public class ServiceAdministradorImpl implements ServiceAdministrador
 			
 			if (admin == null)
 			{
-				return new OperationResult(false, "El administrador " + adminName + " no existe", null);
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.admin.login.adminnotexists", adminName), null);
 			}
 			
 			// Comprobar clave de acceso
@@ -58,12 +62,12 @@ public class ServiceAdministradorImpl implements ServiceAdministrador
 			}
 			else
 			{
-				return new OperationResult(false, "Contraseña incorrecta", null);
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.admin.login.wrongpwd"), null);
 			}
 		}
 		catch (Exception e)
 		{
-			throw new ServiceException("Error al autenticar el administrador " + adminName, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.admin.login.error"), e);
 		}
 	}
 }

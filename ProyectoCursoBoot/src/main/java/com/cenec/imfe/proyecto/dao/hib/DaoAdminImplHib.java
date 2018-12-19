@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.cenec.imfe.proyecto.dao.DaoAdmin;
 import com.cenec.imfe.proyecto.dao.DaoException;
 import com.cenec.imfe.proyecto.model.Administrador;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 @Repository
 public class DaoAdminImplHib implements DaoAdmin
@@ -20,7 +21,10 @@ public class DaoAdminImplHib implements DaoAdmin
 
 	@Autowired
 	private SessionFactory hibernateSessionFactory;
-
+	
+	@Autowired
+	private LanguageUtils msgSource;
+	
 	/**
 	 * Constructor
 	 */
@@ -42,8 +46,7 @@ public class DaoAdminImplHib implements DaoAdmin
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new DaoException("Error al obtener el administrador con nombre " + adminName, e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.admin.getadmin", adminName), e);
 		}
 	}
 }

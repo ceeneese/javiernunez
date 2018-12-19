@@ -3,6 +3,7 @@ package com.cenec.imfe.proyecto.controllers;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import com.cenec.imfe.proyecto.Constants;
 import com.cenec.imfe.proyecto.model.DocumentInfo;
 import com.cenec.imfe.proyecto.services.FileAccessorImplSpring;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 /**
  * Controlador de administración encargado de atender las peticiones relacionadas con documentos
@@ -39,6 +41,10 @@ public class ControllerAdminDocs
 	
 	@Autowired
 	private ServletContext context;
+
+	@Autowired  
+    private LanguageUtils messageSource;
+	
 
 	/**
 	 * Método encargado de recibir las peticiones de creación de un nuevo documento
@@ -114,18 +120,18 @@ public class ControllerAdminDocs
 	 * @param result Resultado de validación de datos
 	 * @param mpFile El fichero a almacenar
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP a invocar tras la operación
 	 */
 	@PostMapping(Constants.URI_OPERATION_SAVE)
 	public String processSaveDoc(@Valid DocumentInfo doc, BindingResult result,
-		@RequestParam(name="file") MultipartFile mpFile, Model model)
+		@RequestParam(name="file") MultipartFile mpFile, Model model, Locale locale)
 	{
 		try
 		{
 			if (result.hasErrors())
 			{
-				// TODO Internacionalizar
-				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "Error en los datos del documento");
+				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.admin.docs.save.errorfields", null, locale));
 				
 				if (doc.getIdDoc() == null)
 				{
@@ -152,12 +158,13 @@ public class ControllerAdminDocs
 		        
 				srvcDocs.saveNewDocument(doc, accessor);
 
-				// TODO Internacionalizar
-				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El documento '" + doc.getName() + "' ha sido guardado");
+				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG,
+						messageSource.getMessage("controller.admin.docs.save.ok", new Object[] {doc.getName()}, locale));
 			}
 			else
 			{
-				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "No se ha incluido ningún documento");
+				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG,
+					messageSource.getMessage("controller.admin.docs.save.no", null, locale));
 			}
 			
 			return processListDocs(model);
@@ -210,17 +217,19 @@ public class ControllerAdminDocs
 	 * 
 	 * @param docId Identificador del documento a borrar
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP a invocar tras la operación
 	 */
 	@GetMapping(Constants.URI_OPERATION_DELETE)
-	public String processDeleteDoc(@RequestParam Integer docId, Model model)
+	public String processDeleteDoc(@RequestParam Integer docId, Model model, Locale locale)
 	{
 		try
 		{
 			boolean deleted = srvcDocs.deleteDocument(docId);
 
-			// TODO Internacionalizar
-			String msg = (deleted ? "El documento ha sido borrado" : "El documento no pudo ser borrado");
+			String msg = (deleted
+				? messageSource.getMessage("controller.admin.docs.delete.ok", null, locale) 
+				: messageSource.getMessage("controller.admin.docs.delete.no", null, locale));
 
 			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, msg);
 			

@@ -16,6 +16,9 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import com.cenec.imfe.proyecto.interceptors.LoginInterceptor;
+import com.cenec.imfe.proyecto.interceptors.MyOwnLanguageInterceptor;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
+import com.cenec.imfe.proyecto.utils.LanguageUtilsImpl;
 
 
 /**
@@ -36,7 +39,7 @@ public class SpringConfiguration implements WebMvcConfigurer
 	@Bean
 	public LocaleChangeInterceptor localeChangeInterceptor()
 	{
-		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+		LocaleChangeInterceptor interceptor = new MyOwnLanguageInterceptor();
 	    interceptor.setParamName("lang");
 	    return interceptor;
 	}
@@ -52,7 +55,19 @@ public class SpringConfiguration implements WebMvcConfigurer
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 	    messageSource.setBasename("classpath:messages");
 	    messageSource.setDefaultEncoding("LATIN1");
+	    
+	    // Se le establece el MessageSource de Spring para que LanguageUtils use la misma instancia creada como bean
+	    LanguageUtilsImpl.getInstance().setSpringMessageSource(messageSource);
+	    
 	    return messageSource;
+	}
+
+	@Bean
+	public LanguageUtils langUtils()
+	{
+		// TODO Este bean es a su vez singleton porque no sé cómo acceder a él
+		// utilizando el contexto propio de Spring y lo necesito en el LocaleChangeInterceptor
+		return LanguageUtilsImpl.getInstance();
 	}
 	
 	@Override

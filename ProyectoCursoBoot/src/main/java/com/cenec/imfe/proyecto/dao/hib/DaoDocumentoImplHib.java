@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.cenec.imfe.proyecto.dao.DaoDocumento;
 import com.cenec.imfe.proyecto.dao.DaoException;
 import com.cenec.imfe.proyecto.model.DocumentInfo;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 @Repository
 public class DaoDocumentoImplHib implements DaoDocumento
@@ -24,6 +25,9 @@ public class DaoDocumentoImplHib implements DaoDocumento
 
 	@Autowired
 	private SessionFactory hibernateSessionFactory;
+
+	@Autowired
+	private LanguageUtils msgSource;
 
 	/**
 	 * Constructor
@@ -44,8 +48,7 @@ public class DaoDocumentoImplHib implements DaoDocumento
 			}
 			catch (Exception e)
 			{
-				// TODO Internacionalizar
-				throw new DaoException("Error al guardar documento", e);
+				throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.doc.save.error", doc.getName()), e);
 			}
 		}
 	}
@@ -59,8 +62,7 @@ public class DaoDocumentoImplHib implements DaoDocumento
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new DaoException("No se puede obtener el documento " + docId);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.doc.getdoc.error"), e);
 		}
 	}
 
@@ -76,8 +78,7 @@ public class DaoDocumentoImplHib implements DaoDocumento
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new DaoException("Error al obtener lista de documentos", e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.doc.getlist.error"), e);
 		}
 	}
 
@@ -99,8 +100,7 @@ public class DaoDocumentoImplHib implements DaoDocumento
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new DaoException("Error al borrar el documento " + docId, e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.doc.delete.error"), e);
 		}
 	}
 	

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cenec.imfe.proyecto.dao.DaoGrupoDocumentos;
 import com.cenec.imfe.proyecto.model.GrupoDocumentos;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 @Service
 @Transactional
@@ -16,6 +17,9 @@ public class ServiceGrupoDocsImplTransactional implements ServiceGrupoDocs
 {
 	@Autowired
 	private DaoGrupoDocumentos dao;
+
+	@Autowired
+	private LanguageUtils msgSource;
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -29,8 +33,7 @@ public class ServiceGrupoDocsImplTransactional implements ServiceGrupoDocs
 			}
 			catch (Exception e)
 			{
-				// Internacionalizar
-				throw new ServiceException("Error al guardar el grupo de documentos", e);
+				throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.groups.save.error"), e);
 			}
 		}
 	}
@@ -44,8 +47,7 @@ public class ServiceGrupoDocsImplTransactional implements ServiceGrupoDocs
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new ServiceException("Error al obtener el grupo de documentos " + groupId, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.groups.get.error"), e);
 		}
 	}
 
@@ -58,8 +60,7 @@ public class ServiceGrupoDocsImplTransactional implements ServiceGrupoDocs
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new ServiceException("Error al obtener la lista de grupos de documentos", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.groups.getlistnames.error"), e);
 		}
 	}
 
@@ -72,8 +73,7 @@ public class ServiceGrupoDocsImplTransactional implements ServiceGrupoDocs
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new ServiceException("Error al obtener la lista de grupos de documentos", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.groups.getlist.error"), e);
 		}
 	}
 
@@ -87,8 +87,7 @@ public class ServiceGrupoDocsImplTransactional implements ServiceGrupoDocs
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new ServiceException("Error al borrar el grupo de documentos " + groupId, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.groups.delete.error"), e);
 		}
 	}
 }

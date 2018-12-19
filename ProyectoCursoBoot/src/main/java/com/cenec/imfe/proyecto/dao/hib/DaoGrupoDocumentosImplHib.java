@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.cenec.imfe.proyecto.dao.DaoException;
 import com.cenec.imfe.proyecto.dao.DaoGrupoDocumentos;
 import com.cenec.imfe.proyecto.model.GrupoDocumentos;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 @Repository
 public class DaoGrupoDocumentosImplHib implements DaoGrupoDocumentos 
@@ -26,6 +27,9 @@ public class DaoGrupoDocumentosImplHib implements DaoGrupoDocumentos
 
 	@Autowired
 	private SessionFactory hibernateSessionFactory;
+
+	@Autowired
+	private LanguageUtils msgSource;
 
 	/**
 	 * Constructor
@@ -46,8 +50,7 @@ public class DaoGrupoDocumentosImplHib implements DaoGrupoDocumentos
 			}
 			catch (Exception e)
 			{
-				// TODO Internacionalizar
-				throw new DaoException("Error al guardar grupo de documentos", e);
+				throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.groups.save.error"), e);
 			}
 		}
 	}
@@ -61,8 +64,7 @@ public class DaoGrupoDocumentosImplHib implements DaoGrupoDocumentos
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new DaoException("Error al obtener el grupo de documentos " + groupId);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.groups.getgroup.error"));
 		}
 	}
 
@@ -78,8 +80,7 @@ public class DaoGrupoDocumentosImplHib implements DaoGrupoDocumentos
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new DaoException("Error al obtener lista de grupos", e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.groups.getlist.error"), e);
 		}
 	}
 	
@@ -108,8 +109,7 @@ public class DaoGrupoDocumentosImplHib implements DaoGrupoDocumentos
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new DaoException("Error al obtener lista de los nombres de grupos", e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.groups.getnameslist.error"), e);
 		}
 	}
 
@@ -132,8 +132,7 @@ public class DaoGrupoDocumentosImplHib implements DaoGrupoDocumentos
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new DaoException("Error al borrar el grupo de documentos " + groupId, e);
+			throw new DaoException(msgSource.getMessageFromDefaultLocale("dao.groups.delete.error"), e);
 		}
 	}
 

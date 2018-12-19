@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cenec.imfe.proyecto.dao.DaoDocumento;
 import com.cenec.imfe.proyecto.model.DocumentInfo;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 @Service
 @Transactional
@@ -24,29 +25,27 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 	@Autowired
 	private DaoDocumento dao;
 
+	@Autowired
+	private LanguageUtils msgSource;
+
 	public void saveNewDocument(DocumentInfo doc, FileAccessor accessor) throws ServiceException
 	{
 		if (doc == null)
 		{
-			// TODO Internacionalizar
-			throw new ServiceException("Error al guardar el documento: documento vacío");
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.save.emptyfile"));
 		}
 		
 		if (doc.getIdDoc() != null)
 		{
 			// Actualización, no nuevo documento. Por ahora esto no está soportado
-			// TODO Internacionalizar
-			throw new ServiceException("Error al guardar el documento: el documento '" + doc.getName() + "' ya existe");
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.save.alreadyexist", doc.getName()));
 		}
 		
 		if (!(accessor instanceof FileAccessorImplSpring))
 		{
 			String accessorClass = (accessor == null ? "null" : accessor.getClass().getName());
 
-			// TODO Internacionalizar
-			throw new ServiceException(
-				"Error al guardar el documento: El objeto accessor de ficheros no es del tipo esperado. Se espera " + 
-				MultipartFile.class.getName() + " y se ha recibido " + accessorClass);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.save.accessor", MultipartFile.class.getName(), accessorClass));
 		}
 		
 		try
@@ -101,8 +100,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new ServiceException("Error al guardar el documento", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.save.error"), e);
 		}
 
 	}
@@ -150,8 +148,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new ServiceException("Error al guardar el documento", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.save.error"), e);
 		}
 	}
 	 */
@@ -165,8 +162,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new ServiceException("Error al actualizar datos del documento", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.update.error"), e);
 		}
 	}
 
@@ -179,8 +175,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		}
 		catch (Exception e)
 		{
-			// Internacionalizar
-			throw new ServiceException("Error al obtener el documento " + docId, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.get.error"), e);
 		}
 	}
 
@@ -193,8 +188,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new ServiceException("Error al obtener la lista de documentos", e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.getlist.error"), e);
 		}
 	}
 
@@ -210,8 +204,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new ServiceException("Error al borrar el documento " + docId, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.delete.error"), e);
 		}
 	}
 	
@@ -229,8 +222,7 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		}
 		catch (Exception e)
 		{
-			// TODO Internacionalizar
-			throw new ServiceException("Error al descargar el documento " + docId, e);
+			throw new ServiceException(msgSource.getMessageFromDefaultLocale("service.doc.download.error"), e);
 		}
 	}
 }

@@ -11,7 +11,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +29,7 @@ import com.cenec.imfe.proyecto.model.GrupoDocumentos;
 import com.cenec.imfe.proyecto.model.Usuario;
 import com.cenec.imfe.proyecto.services.ServiceGrupoDocs;
 import com.cenec.imfe.proyecto.services.ServiceUsuario;
+import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
 /**
  * Controlador de administración encargado de atender las peticiones relacionadas con usuarios
@@ -47,7 +47,7 @@ public class ControllerAdminUsers
 	private ServiceUsuario srvcUsuario;
 	
 	@Autowired  
-    private MessageSource messageSource;
+    private LanguageUtils messageSource;
 	
 	/**
 	 * Registro de vinculador para gestión de formatos de fecha
@@ -186,8 +186,7 @@ public class ControllerAdminUsers
 		{
 			List<FieldError> errors = result.getFieldErrors();
 			
-			// TODO Internacionalizar
-			String errorStr = "Campos erróneos: ";
+			String errorStr = messageSource.getMessage("controller.admin.users.save.errorfields", null, locale);
 			for (FieldError fe : errors)
 			{
 				errorStr = errorStr + " -" + fe.getField();
@@ -242,8 +241,7 @@ public class ControllerAdminUsers
 			
 			srvcUsuario.saveUsuario(user);
 			
-			// TODO Internacionalizar
-			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, "El usuario ha sido guardado");
+			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, messageSource.getMessage("controller.admin.users.save.ok", null, locale));
 			
 			return processListUsers(model);
 		}
@@ -316,18 +314,20 @@ public class ControllerAdminUsers
 	 * 
 	 * @param idUser Identificador del usuario a borrar
 	 * @param model Modelo de datos Req/Res de Spring
+	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP a invocar tras la operación
 	 */
 	@GetMapping(Constants.URI_OPERATION_DELETE)
-	public String processDeleteUser(@RequestParam Integer idUser, Model model)
+	public String processDeleteUser(@RequestParam Integer idUser, Model model, Locale locale)
 	{
 		try
 		{
 			AccessBy.AccessByUsr access = new AccessBy.AccessByUsr(idUser);
 			boolean deleted = srvcUsuario.deleteUsuario(access);
 
-			// TODO Internacionalizar
-			String msg = (deleted ? "El usuario ha sido borrado" : "El usuario no pudo ser borrado");
+			String msg = (deleted
+				? messageSource.getMessage("controller.admin.users.delete.ok", null, locale)
+				: messageSource.getMessage("controller.admin.users.delete.no", null, locale));
 			
 			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, msg);
 			return Constants.JSP_ADMIN_EDITUSER;
