@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,14 +140,13 @@ public class ControllerAdminGroups
 	 * @param grp Datos del grupo de documentos
 	 * @param result Resultado de validación de datos
 	 * @param checkedDocs Lista de los identificadores de documentos incluidos en el grupo
-	 * @param req Petición HTTP para el acceso a datos no incluidos en el modelo Spring
 	 * @param model Modelo de datos Req/Res de Spring
 	 * @param locale Identificador de localización para internacionalización de mensajes
 	 * @return Nombre de la JSP a invocar tras la operación
 	 */
 	@PostMapping(Constants.URI_OPERATION_SAVE)
 	public String processSaveGroup(@Valid @ModelAttribute GrupoDocumentos grp, BindingResult result,
-		@RequestParam(required=false) String checkedDocs, HttpServletRequest req, Model model, Locale locale)
+		@RequestParam(required=false) String checkedDocs, Model model, Locale locale)
 	{
 		// Comprobamos el BindingResult
 		if (result.hasErrors())

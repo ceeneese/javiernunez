@@ -25,7 +25,7 @@
 
 	    <!-- jQuery and vendor libraries -->
 	    <script src="/js/jquery-3.2.1.js"></script>
-		<script src="/js/vendor/popper.min.js"></script> <!-- Esta librería da un error de sintaxis -->
+		<!-- script src="/js/vendor/popper.min.js"></script --> <!-- Esta librería da un error de sintaxis -->
 	    <script src="/js/bootstrap.min.js"></script>
 	</head>
 

@@ -112,12 +112,9 @@ public class ControllerInicio
 
 				// El userId es añadido a la sesión
 				model.addAttribute(Constants.SESSION_ATTR_USERID, userId);
-
-				// return "forward:user/doclist";
-				return "redirect:" + Constants.URI_USER_DOCLIST;
 				
-				// También podría hacerse la llamada directamente en Java:
-//				return processList(userId, model);
+				// return "forward:" + Constants.URI_USER_DOCLIST;
+				return "redirect:" + Constants.URI_USER_DOCLIST;
 			}
 			else
 			{
@@ -157,7 +154,7 @@ public class ControllerInicio
 		}
 		
 		// En cualquier caso, nos vamos a UserLogin; el interceptor sabrá qué hacer con la sesión
-		return "forward:" + Constants.URI_USER_LOGIN;
+		return "redirect:" + Constants.URI_USER_LOGIN;
 	}
 	
 	/**
@@ -234,8 +231,8 @@ public class ControllerInicio
 				model.addAttribute(Constants.SESSION_ATTR_ADMINID, adminId);
 
 				// TODO ¿Es más correcto redirect a la URI (y así pasa por el interceptor) o envío directo de la JSP? 
-				// return "redirect:" + Constants.URI_ADMIN_MAINMENU;
-				return processAdminMainMenu();
+				return "redirect:" + Constants.URI_ADMIN_MAINMENU;
+				// return processAdminMainMenu();
 			}
 			else
 			{
@@ -290,7 +287,7 @@ public class ControllerInicio
 		}
 		
 		// En cualquier caso, nos vamos a AdminLogin; el interceptor sabrá qué hacer con la sesión
-		return "forward:" + Constants.URI_ADMIN_LOGIN;
+		return "redirect:" + Constants.URI_ADMIN_LOGIN;
 	}
 	
 }

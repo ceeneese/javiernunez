@@ -7,6 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 		<label class="main-title"><spring:message code="jsp.user.login.body"/></label>
+		<br>
 		
 		<!-- Mensaje a mostrar (en caso de que exista alguno) -->
 		<label id="msgLabel" class="result-msg">${ModelAttrResultMsg}</label>

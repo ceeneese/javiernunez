@@ -162,6 +162,9 @@ public class ControllerUser
 	{
 		//TODO Lo correcto sería responder con un ResponseEntity también en caso de error
 		
+		//TODO Si un usuario manipula el parámetro de la URL a mano, puede acceder a cualquier documento
+		// Sería interesante hacer una comprobación previa de que el usuario tiene acceso al documento requerido
+		
 		try
 		{
 			if (docId == null)
@@ -182,11 +185,11 @@ public class ControllerUser
 				MediaType mediaType = getMediaTypeForFileName(request.getServletContext(), dfb.getFileName());
 
 				return ResponseEntity.ok()
-	                // Content-Disposition
+	                // Content disposition
 	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + dfb.getFileName())
-	                // Content-Type
+	                // Content type
 	                .contentType(mediaType)
-	                // Contet-Length
+	                // Content length
 	                .contentLength(dfb.getFileLength()) //
 	                .body(dfb.getStream());
 			}
