@@ -18,6 +18,6 @@
 		${ModelAttrError}
 		<br><br>
 		
-		<a href="inicio"><spring:message code="jsp.user.error.exitlink"/></a>
+		<a href="/user/login"><spring:message code="jsp.user.error.exitlink"/></a>
 	</body>
 </html>
