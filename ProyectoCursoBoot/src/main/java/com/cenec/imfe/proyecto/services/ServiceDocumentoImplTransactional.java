@@ -3,10 +3,12 @@ package com.cenec.imfe.proyecto.services;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,8 +142,6 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 				}
 			}
 			
-			
-			
 			doc.setLocation(springAccessor.getPath());
 
 			dao.saveDocument(doc);
@@ -194,13 +194,41 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public boolean deleteDocument(int docId) throws ServiceException
+	public OperationResult deleteDocument(int docId) throws ServiceException
 	{
 		try
 		{
-			// TODO Falta borrar el documento del disco
+			DocumentInfo doc = dao.getDocument(docId);
 			
-			return dao.deleteDocument(docId);
+			if (doc == null)
+			{
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.doc.delete.invalidid"), null);
+			}
+			
+			String location = doc.getLocation();
+			
+			File file = (location == null ? null : new File(location));
+			
+			if (file == null || !file.exists())
+			{
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.doc.delete.filenotexist"), null);
+			}
+			
+			boolean deleted1 = file.delete();
+			
+			if (!deleted1)
+			{
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.doc.delete.filenotdeleted"), null);				
+			}
+			
+			boolean deleted2 = dao.deleteDocument(docId);
+			
+			if (!deleted2)
+			{
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.doc.delete.dberror"), null);
+			}
+			
+			return new OperationResult(true, "", null);
 		}
 		catch (Exception e)
 		{
@@ -215,10 +243,31 @@ public class ServiceDocumentoImplTransactional implements ServiceDocumento
 		{
 			DocumentInfo doc = dao.getDocument(docId);
 			
+			if (doc == null)
+			{
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.doc.download.invalidid"), null);
+			}
+			
 			String location = doc.getLocation();
 			
-			// TODO Falta implementar
-			return new OperationResult(false, "Método no implementado", null);
+			File file = (location == null ? null : new File(location));
+			
+			if (file == null || !file.exists())
+			{
+				return new OperationResult(false, msgSource.getMessageFromDefaultLocale("service.doc.download.wronglocation"), null);
+			}
+			
+			String treeFileName = doc.getLocation();
+			int idx1 = treeFileName.lastIndexOf('/');
+			int idx2 = treeFileName.lastIndexOf('\\');
+			int idx = (idx1 > idx2 ? idx1 : idx2);
+			String fileName = treeFileName.substring(idx + 1);
+			
+	        InputStreamResource stream = new InputStreamResource(new FileInputStream(file));
+	        
+	        DownloadableFileBundle dfb = new DownloadableFileBundle(fileName, file.length(), stream);
+			
+			return new OperationResult(true, null, dfb);
 		}
 		catch (Exception e)
 		{

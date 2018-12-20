@@ -108,7 +108,7 @@ public class ControllerInicio
 			
 			if (result.getOperationResult())
 			{
-				Integer userId = result.getAccess();
+				Integer userId = (Integer)result.getResultObject();
 
 				// El userId es añadido a la sesión
 				model.addAttribute(Constants.SESSION_ATTR_USERID, userId);
@@ -228,7 +228,7 @@ public class ControllerInicio
 			
 			if (result.getOperationResult())
 			{
-				Integer adminId = result.getAccess();
+				Integer adminId = (Integer)result.getResultObject();
 
 				// El adminId es añadido a la sesión
 				model.addAttribute(Constants.SESSION_ATTR_ADMINID, adminId);

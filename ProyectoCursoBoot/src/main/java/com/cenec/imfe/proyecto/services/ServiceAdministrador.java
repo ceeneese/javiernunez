@@ -7,7 +7,7 @@ public interface ServiceAdministrador
 	 * 
 	 * @param adminName Nombre de usuario de acceso, no nulo y no vacío
 	 * @param adminPassword Clave de usuario de acceso, no nula y no vacía
-	 * @return 'true' si la tupla usr/pwd es válida; mensaje de error en otro caso
+	 * @return Resultado 'true' con el identificador del administrador si la tupla usr/pwd es válida; 'false' y mensaje de error en otro caso
 	 * @throws ServiceException
 	 */
 	OperationResult autenticar(String adminName, String adminPassword) throws ServiceException;

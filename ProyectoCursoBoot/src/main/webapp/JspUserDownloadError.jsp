@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ page isErrorPage="true"%>
+<%@ page errorPage="JspUserError.jsp"%>
  
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
@@ -8,16 +8,12 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="jsp.user.error.title"/></title>
+		<title><spring:message code="jsp.user.downloaderror.title"/></title>
 	</head>
 
 	<body>
-
-		<spring:message code="jsp.user.error.message"/>
-		<br>
-		${ModelAttrError}
+		<h1><spring:message code="jsp.user.downloaderror.message"/></h1>
 		<br><br>
-		
-		<a href="inicio"><spring:message code="jsp.user.error.exitlink"/></a>
+		${ModelAttrResultMsg}
 	</body>
 </html>

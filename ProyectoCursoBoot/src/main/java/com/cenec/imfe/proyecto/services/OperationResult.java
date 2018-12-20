@@ -4,17 +4,16 @@ package com.cenec.imfe.proyecto.services;
  * Clase utilizada para devolver el resultado de un intento de operación en el sistema.
  * 
  * Si el resultado es erróneo, el valor de 'result' es 'false' y se retorna un mensaje de error. Si
- * el resultado es exitoso, el valor de 'result' es 'true' y se puede retornar un identificador de tipo
- * Integer (identificador de usuario o de documento, por ejemplo)
+ * el resultado es exitoso, el valor de 'result' es 'true' y se puede retornar un objeto que es el
+ * resultado de la operación solicitada
  * 
- * @author usuario
- *
+ * @author Javier
  */
 public class OperationResult
 {
 	private boolean result;
 	private String error;
-	private Integer access;
+	private Object access;
 	
 	/**
 	 * Constructor
@@ -23,7 +22,7 @@ public class OperationResult
 	 * @param error
 	 * @param access
 	 */
-	public OperationResult(boolean result, String error, Integer access)
+	public OperationResult(boolean result, String error, Object access)
 	{
 		super();
 		
@@ -40,7 +39,7 @@ public class OperationResult
 		return error;
 	}
 
-	public Integer getAccess() {
+	public Object getResultObject() {
 		return access;
 	}
 }

@@ -44,16 +44,16 @@ public interface ServiceDocumento
 	 * Elimina los datos de un documento del sistema
 	 * 
 	 * @param docId
-	 * @return 'true' si el documento pudo ser borrado; 'false' en caso contrario
+	 * @return 'true' si el documento pudo ser borrado; 'false' en caso contrario con mensaje de lo ocurrido
 	 * @throws ServiceException En caso de producirse un error durante el proceso de borrado
 	 */
-	public boolean deleteDocument(int docId) throws ServiceException;
+	public OperationResult deleteDocument(int docId) throws ServiceException;
 
 	/**
 	 * Realiza la descarga de un documento.
 	 * 
-	 * @param docId
-	 * @return El resultado de la operación
+	 * @param docId Identificador del documento a descargar
+	 * @return En caso de resultado correcto, un OperationResult con un InputStreamResource como objeto interno
 	 * @throws ServiceException
 	 */
 	public OperationResult downloadDoc(Integer docId) throws ServiceException;

@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cenec.imfe.proyecto.Constants;
 import com.cenec.imfe.proyecto.model.DocumentInfo;
 import com.cenec.imfe.proyecto.services.FileAccessorImplSpring;
+import com.cenec.imfe.proyecto.services.OperationResult;
 import com.cenec.imfe.proyecto.services.ServiceDocumento;
 import com.cenec.imfe.proyecto.utils.LanguageUtils;
 
@@ -125,7 +126,7 @@ public class ControllerAdminDocs
 	 */
 	@PostMapping(Constants.URI_OPERATION_SAVE)
 	public String processSaveDoc(@Valid DocumentInfo doc, BindingResult result,
-		@RequestParam(name="file") MultipartFile mpFile, Model model, Locale locale)
+		@RequestParam(name="file", required=false) MultipartFile mpFile, Model model, Locale locale)
 	{
 		try
 		{
@@ -146,10 +147,18 @@ public class ControllerAdminDocs
 			if (doc.getIdDoc() != null)
 			{
 				// Actualización de archivo (sólo nombre), no archivo nuevo
-				srvcDocs.updateDocument(doc);
+				
+				// Es necesario hacer este paso porque 'doc' tiene 'location==null'
+				// y la BBDD da error por violación de restricción
+				DocumentInfo retrievedDoc = srvcDocs.getDocument(doc.getIdDoc());
+				retrievedDoc.setName(doc.getName());
+				
+				srvcDocs.updateDocument(retrievedDoc);
+
+				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG,
+						messageSource.getMessage("controller.admin.docs.update.ok", new Object[] {doc.getName()}, locale));
 			}
-			
-			if (mpFile != null && mpFile.getOriginalFilename() != null && !mpFile.getOriginalFilename().isEmpty())
+			else if (mpFile != null && mpFile.getOriginalFilename() != null && !mpFile.getOriginalFilename().isEmpty())
 			{
 				String initPath = File.separator + DOCUMENTS_PATH + File.separator + mpFile.getOriginalFilename();
 		        String filePath = context.getRealPath(initPath);
@@ -159,7 +168,7 @@ public class ControllerAdminDocs
 				srvcDocs.saveNewDocument(doc, accessor);
 
 				model.addAttribute(Constants.MODEL_ATTR_RESULTMSG,
-						messageSource.getMessage("controller.admin.docs.save.ok", new Object[] {doc.getName()}, locale));
+					messageSource.getMessage("controller.admin.docs.save.ok", new Object[] {doc.getName()}, locale));
 			}
 			else
 			{
@@ -225,11 +234,11 @@ public class ControllerAdminDocs
 	{
 		try
 		{
-			boolean deleted = srvcDocs.deleteDocument(docId);
+			OperationResult result = srvcDocs.deleteDocument(docId);
 
-			String msg = (deleted
+			String msg = (result.getOperationResult()
 				? messageSource.getMessage("controller.admin.docs.delete.ok", null, locale) 
-				: messageSource.getMessage("controller.admin.docs.delete.no", null, locale));
+				: messageSource.getMessage("controller.admin.docs.delete.no", new Object[] {result.getError()}, locale));
 
 			model.addAttribute(Constants.MODEL_ATTR_RESULTMSG, msg);
 			

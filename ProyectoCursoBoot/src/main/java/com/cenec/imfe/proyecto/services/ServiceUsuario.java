@@ -13,7 +13,7 @@ public interface ServiceUsuario
 	 * 
 	 * @param webUsr Nombre de usuario de acceso, no nulo y no vacío
 	 * @param webPwd Clave de usuario de acceso, no nula y no vacía
-	 * @return el identificador de usuario si la tupla usr/pwd es válida; mensaje de error en otro caso
+	 * @return Resultado 'true' con el identificador del usuario si la tupla usr/pwd es válida; 'false' y mensaje de error en otro caso
 	 * @throws ServiceException
 	 */
 	public OperationResult login(String webUsr, String webPwd) throws ServiceException;

@@ -55,6 +55,7 @@ public interface Constants
 	String URI_OPERATION_LOGIN = "/login";
 	String URI_OPERATION_DOCLIST = "/doclist";
 	String URI_OPERATION_DOWNLOAD = "/download";
+	String URI_OPERATION_DOWNLOADERROR = "/downloaderror";
 	String URI_OPERATION_LOGOUT = "/logout";
 
 	String URI_USER_LOGIN = URI_BASE_USER + URI_OPERATION_LOGIN;
@@ -92,6 +93,7 @@ public interface Constants
 	String JSP_USER_LOGIN = "JspUserLogin";
 	String JSP_USER_ERROR = "JspUserError";
 	String JSP_USER_LISTDOCS = "JspUserListDocs";
+	String JSP_USER_DOWNLOADERROR = "JspUserDownloadError";
 
 	String JSP_ADMIN_LOGIN = "JspAdminLogin";
 	String JSP_ADMIN_ERROR = "JspAdminError";
