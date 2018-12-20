@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE tiles-definitions PUBLIC       
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"       
+	"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+
+    <definition name="baseLayout" template="/tiles/layout.jsp">
+        <put-attribute name="header" value="" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/tiles/FooterTile.jsp" />
+    </definition>
+
+	<!-- Plantilla base para el administrador -->
+    <definition name="baseAdmin" extends="baseLayout">
+        <put-attribute name="header" value="/tiles/HeaderTileAdmin.jsp" />
+    </definition>
+
+	<!-- Plantilla base para el usuario -->
+    <definition name="baseUser" extends="baseLayout">
+        <put-attribute name="header" value="/tiles/HeaderTileUser.jsp" />
+    </definition>
+
+	<!-- Plantillas de usuario -->
+
+    <definition name="JspUserLogin" extends="baseUser">
+        <put-attribute name="body" value="/BodyTileUserLogin.jsp" />
+    </definition>
+
+    <definition name="JspUserDownloadError" extends="baseUser">
+        <put-attribute name="body" value="/BodyTileUserDownloadError.jsp" />
+    </definition>
+
+    <definition name="JspUserError" extends="baseUser">
+        <put-attribute name="body" value="/BodyTileUserError.jsp" />
+    </definition>
+
+    <definition name="JspUserListDocs" extends="baseUser">
+        <put-attribute name="body" value="/BodyTileUserListDocs.jsp" />
+    </definition>
+
+	<!-- Plantillas de administrador -->
+
+    <definition name="JspAdminEditDocument" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminEditDocument.jsp" />
+    </definition>
+
+    <definition name="JspAdminEditGroup" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminEditGroup.jsp" />
+    </definition>
+
+    <definition name="JspAdminEditUser" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminEditUser.jsp" />
+    </definition>
+
+    <definition name="JspAdminError" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminError.jsp" />
+    </definition>
+
+    <definition name="JspAdminListDocs" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminListDocs.jsp" />
+    </definition>
+
+    <definition name="JspAdminListGroups" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminListGroups.jsp" />
+    </definition>
+
+    <definition name="JspAdminListUsers" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminListUsers.jsp" />
+    </definition>
+
+    <definition name="JspAdminLogin" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminLogin.jsp" />
+    </definition>
+
+    <definition name="JspAdminMainMenu" extends="baseAdmin">
+        <put-attribute name="body" value="/BodyTileAdminMainMenu.jsp" />
+    </definition>
+
+    
+</tiles-definitions>

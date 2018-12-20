@@ -6,17 +6,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 
-<!DOCTYPE html>
-
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="jsp.admin.editdoc.title"/></title>
-	</head>
-	
-	<body>
-
-		<br><h1>
+		<br><label class="main-title">
 		<c:choose>
 			<c:when test = "${ModelAttrDocument.idDoc != null}">
 				<%-- Estamos en modo de edición de documento ya existente --%>
@@ -32,10 +22,10 @@
 				<spring:message code="jsp.admin.editdoc.back.mainmenu" var="msgcode"/>
 			</c:otherwise>
 		</c:choose>
-		</h1><br>
+		</label><br>
 		
 		<%-- Mensaje a mostrar (en caso de que exista alguno) --%>
-		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
+		<label id="msgLabel" class="result-msg">${ModelAttrResultMsg}</label>
 
 		<form:form modelAttribute="ModelAttrDocument" method="POST" action="/admin/doc/save" enctype="multipart/form-data">
 			
@@ -70,5 +60,3 @@
 		
 		<br><br>
 		<a href="${backhref}">${msgcode}</a>
-	</body>
-</html>

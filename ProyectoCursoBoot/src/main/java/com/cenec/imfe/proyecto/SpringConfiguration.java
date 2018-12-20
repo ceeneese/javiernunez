@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 
 import com.cenec.imfe.proyecto.interceptors.LoginInterceptor;
 import com.cenec.imfe.proyecto.interceptors.MyOwnLanguageInterceptor;
@@ -81,9 +82,17 @@ public class SpringConfiguration implements WebMvcConfigurer
 	    reg.excludePathPatterns("/js/*");
 	}
 	
+	@Bean
+	public TilesConfigurer tilesConfigurer() {
+		TilesConfigurer tiles = new TilesConfigurer();
+		tiles.setDefinitions(new String[] { "/WEB-INF/tiles.xml" });
+		return tiles;
+	}
+
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
-		registry.jsp("/", ".jsp");
+		// registry.jsp("/", ".jsp");
+		registry.tiles();
 	}
 	
 	/**

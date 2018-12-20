@@ -48,7 +48,7 @@ public class ControllerAdminAjax
 			AccessBy access = new AccessBy.AccessByWebUsr(webUsername);
 			Usuario usr = srvcUser.getUsuario(access);
 			
-			String result = (usr == null ? Constants.AJAX_RESULT_AVAILABLE : Constants.AJAX_RESULT_UNAVAILABLE);
+			String result = (usr == null ? Constants.AJAX_RESULT_AVAILABLE : usr.getIdUsuario().toString());
 			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		}
 		catch (Exception e)

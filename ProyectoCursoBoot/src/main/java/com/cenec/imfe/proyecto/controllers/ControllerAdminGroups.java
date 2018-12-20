@@ -218,7 +218,7 @@ public class ControllerAdminGroups
 	{
 		try
 		{
-			List<GrupoDocumentos> groupsList = srvcGroupDocs.getGroupNames();
+			List<GrupoDocumentos> groupsList = srvcGroupDocs.getGroups();
 			
 			model.addAttribute(Constants.MODEL_ATTR_GROUPSLIST, groupsList);
 			

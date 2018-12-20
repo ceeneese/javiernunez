@@ -5,24 +5,15 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!DOCTYPE html>
-
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title><spring:message code="jsp.admin.listdocs.title"/></title>
-	</head>
-	
-	<body>
-		<h1><spring:message code="jsp.admin.listdocs.body"/></h1>
+		<label class="main-title"><spring:message code="jsp.admin.listdocs.body"/></label>
 		<br><br>
 		
 		<!-- Mensaje a mostrar (en caso de que exista alguno) -->
-		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
+		<label id="msgLabel" class="result-msg">${ModelAttrResultMsg}</label>
 		<br><br>		
 
-		<table>
-			<thead>
+		<table class="table table-bordered">
+			<thead class="thead-dark">
 				<tr>
 					<th><spring:message code="jsp.admin.listdocs.tableheader.docname"/></th>
 					<th><spring:message code="jsp.admin.listdocs.tableheader.modify"/></th>
@@ -48,5 +39,3 @@
 		<br>
 				
 		<a href="/admin/mainmenu"><spring:message code="jsp.admin.listdocs.back"/></a>
-	</body>
-</html>

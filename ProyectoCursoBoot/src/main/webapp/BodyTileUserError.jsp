@@ -4,20 +4,10 @@
  
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="jsp.user.error.title"/></title>
-	</head>
 
-	<body>
-
-		<spring:message code="jsp.user.error.message"/>
+		<label class="main-title"><spring:message code="jsp.user.error.message"/></label>
 		<br>
 		${ModelAttrError}
 		<br><br>
 		
 		<a href="/user/login"><spring:message code="jsp.user.error.exitlink"/></a>
-	</body>
-</html>

@@ -7,24 +7,17 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 
-<!DOCTYPE html>
-
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="jsp.admin.editgroup.title"/></title>
-	</head>
 	
 	<%-- A esta JSP le llega MODEL_ATTR_DOCSLIST, y además un atributo MODEL_ATTR_GROUP que puede estar vacío en el caso de nuevo grupo --%>
 
 	<script>
-	
-	function updateCheckersStatus()
+	$(document).ready(function()
 	{
+		// function updateCheckersStatus()
 		var attachedDocs = ${ModelAttrCheckedDocsIds};
 		attachedDocs.forEach(updateChecker);
-	}
-	
+	});
+			
 	function updateChecker(documentId)
 	{
 		var checkbox = document.getElementById(documentId);
@@ -34,8 +27,7 @@
 	
 	</script>
 	
-	<body onload="updateCheckersStatus()">
-		<br><h1>
+		<br><label class="main-title">
 		<c:choose>
 			<c:when test = "${ModelAttrGroup.id != null}">
 				<%-- Estamos en modo de edición de grupo ya existente --%>
@@ -51,24 +43,33 @@
 				<spring:message code="jsp.admin.editgroup.back.mainmenu" var="msgcode"/>
 			</c:otherwise>
 		</c:choose>
-		</h1><br>
+		</label><br>
 		
 		<%-- Mensaje a mostrar (en caso de que exista alguno) --%>
-		<h3><label id="msgLabel">${ModelAttrResultMsg}</label></h3>
+		<label id="msgLabel" class="result-msg">${ModelAttrResultMsg}</label>
 		
 		<form:form modelAttribute="ModelAttrGroup" method="POST" action="/admin/group/save">
 			
 			<form:hidden path="id"/>
 			
-			<table>
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+				<tr>
+					<th><spring:message code="jsp.admin.editgroup.tableheader.field"/></th>
+					<th><spring:message code="jsp.admin.editgroup.tableheader.value"/></th>
+				</tr>
+				</thead>
+				
+				<tbody>
 				<tr>
 					<td><spring:message code="jsp.admin.editgroup.groupname"/></td>
 					<td><form:input path="nombre"/></td>
-					<td><form:errors path="nombre" cssClass="error" /></td>
+					<!-- td><form:errors path="nombre" cssClass="error" /></td -->
 				</tr>
 			
 				<tr>
-					<td><spring:message code="jsp.admin.editgroup.includeddocs"/></td>
+					<td><label class="checklist"><spring:message code="jsp.admin.editgroup.includeddocs"/></label></td>
+					<td></td>
 				</tr>
 
 				<c:forEach items="${ModelAttrDocsList}" var="doc">
@@ -79,14 +80,12 @@
 				</c:forEach> 
 
 				<tr>
-					<td><input type="submit" value="<spring:message code="jsp.admin.editgroup.submit"/>"/></td>
+					<td></td>
+					<td><input class="btn btn-lg btn-primary btn-block" type="submit" value="<spring:message code="jsp.admin.editgroup.submit"/>"/></td>
 				</tr>
+				</tbody>
 			</table>
 		</form:form>
 		
 		<br><br>
 		<a href="${backhref}">${msgcode}</a>
-
-	</body>
-	
-</html>
