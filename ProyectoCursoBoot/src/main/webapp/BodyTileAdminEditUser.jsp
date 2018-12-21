@@ -178,7 +178,7 @@
 				<tr>
 					<td><spring:message code="jsp.admin.edituser.date"/></td>
 					<fmt:formatDate value="${ModelAttrUser.fechaAlta}" pattern="yyyy-MM-dd" var="fechaAlta"/>
-					<!-- td><form:input path="fechaAlta" type="date" value="${fechaAlta}"/></td -->
+					<td><form:input path="fechaAlta" type="date" value="${fechaAlta}"/></td>
 				</tr>
 
 				<tr>
